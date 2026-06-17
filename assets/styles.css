@@ -410,6 +410,109 @@ p {
   object-fit: cover;
 }
 
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.image-card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.image-card img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.image-card div {
+  padding: 22px;
+}
+
+.image-card h3 {
+  margin: 0 0 10px;
+  color: var(--graphite);
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.image-card p {
+  color: var(--muted);
+}
+
+.prose-grid {
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: 44px;
+  align-items: start;
+}
+
+.prose {
+  color: var(--muted);
+  font-size: 17px;
+}
+
+.prose p + p {
+  margin-top: 16px;
+}
+
+.check-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.check-item {
+  padding: 20px;
+  border-left: 3px solid var(--teal);
+  background: #fff;
+}
+
+.check-item strong {
+  display: block;
+  color: var(--graphite);
+  margin-bottom: 6px;
+}
+
+.check-item span {
+  color: var(--muted);
+}
+
+.faq {
+  display: grid;
+  gap: 12px;
+}
+
+.faq details {
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.faq summary {
+  cursor: pointer;
+  color: var(--graphite);
+  font-weight: 780;
+}
+
+.faq p {
+  margin-top: 12px;
+  color: var(--muted);
+}
+
+.seo-note {
+  padding: 24px;
+  border-radius: 8px;
+  background: #e8f3f1;
+  color: var(--teal-dark);
+  font-weight: 650;
+}
+
 .text-block h2 {
   margin: 0 0 20px;
   color: var(--graphite);
@@ -693,6 +796,9 @@ td {
 
   .grid.three,
   .grid.two,
+  .image-grid,
+  .prose-grid,
+  .check-grid,
   .split,
   .split.reverse,
   .band-inner,
