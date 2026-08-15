@@ -18,277 +18,75 @@ A child can have a dedicated Child House connected to a Family House.
 
 In early childhood, parents or authorized guardians manage it. Over time, the child receives increasing ability to contribute, control privacy and manage their own spaces.
 
-The House itself should visually grow with the child:
+The House itself should visually grow with the child: Nursery → Kids Room → School-age room → Teen space → Independent House.
 
-- Nursery
-- Kids Room
-- School-age room
-- Teen space
-- Independent House
-
-The transformation should be driven by real life rather than arbitrary game levels.
-
-Examples of events that can shape the space:
-
-- First word
-- First steps
-- First birthday
-- First drawing
-- First school day
-- Favorite books
-- Sports
-- Music
-- Hobbies
-- Projects
-- Travel
-- Achievements
-- Pets
-- Friends and selected memories
+The transformation should be driven by real life: first words, first steps, drawings, school, books, sports, music, hobbies, projects, travel, achievements, pets and selected memories.
 
 ---
 
 # 2. Structured childhood memory
 
-The purpose is to transform thousands of disconnected photos, documents and parental notes into a coherent timeline.
+The purpose is to transform disconnected photos, documents and parental notes into a coherent timeline. Potential objects include photos/videos, milestones, drawings, voice recordings, school achievements, trips, favorite books, hobbies, sports, family events, pets, places and family recipes.
 
-Potential memory objects:
-
-- Photos/videos
-- Milestones
-- Drawings
-- Voice recordings
-- School achievements
-- Trips
-- Favorite books
-- Hobbies
-- Sports
-- Family events
-- Pets
-- Places
-- Family recipes
-
-Example timeline:
-
-Age 1 → first steps
-Age 3 → first trip abroad
-Age 6 → first school day
-Age 9 → first football competition
-Age 12 → first coding project
-
-The system should preserve original media and clearly distinguish parent-authored memories from AI-generated summaries.
+The system should preserve original media and distinguish parent-authored memories from AI-generated summaries.
 
 ---
 
 # 3. Growth Book
 
-The Child House can contain a private Growth Book.
+The Child House can contain a private Growth Book for height, weight, age-relevant measurements, developmental milestones, teeth, vision-related records, sleep and nutrition notes.
 
-Possible measurements:
-
-- Height
-- Weight
-- Head circumference for young children where relevant
-- Developmental milestones
-- Teeth
-- Vision-related records
-- Sleep notes
-- Nutrition notes
-
-Measurements should be timestamped and sourced.
-
-Growth comparisons should use recognized age-appropriate reference data where available rather than LLM estimation.
-
-The Butler may identify changes worth discussing with a clinician but must not diagnose from growth data.
-
-Example:
-
-> This measurement differs from the previous growth trend. It may be worth discussing at the next pediatric visit.
+Measurements are timestamped and sourced. Comparisons should use recognized age-appropriate reference data where available rather than LLM estimation. The Butler may identify changes worth discussing with a clinician but must not diagnose from growth data.
 
 ---
 
 # 4. Vaccination Passport
 
-FUL.HOUSE should maintain a structured vaccination record.
+FUL.HOUSE maintains a structured vaccination record including vaccine, disease coverage, dose, date, clinic, clinician, manufacturer, batch/lot where available, source document, reactions/notes and next expected dose when supported by an authoritative schedule.
 
-Each vaccination event can include:
+AI may extract records from photographs/documents, but uncertain fields require confirmation.
 
-- Vaccine
-- Disease(s) covered
-- Dose number
-- Date
-- Clinic
-- Clinician
-- Manufacturer
-- Batch/lot where available
-- Certificate/photo/document
-- Recorded reaction/notes
-- Next expected dose when supported by an authoritative schedule
-
-Users can photograph or upload vaccination records. AI may extract structured data, but uncertain fields must be marked for confirmation.
-
-## Schedule architecture
-
-FUL.HOUSE must separate:
-
-**Observed fact** → vaccination actually recorded for this child.
-
-from
-
-**Recommendation** → what a selected current schedule suggests.
-
-Vaccination schedules vary by country, age, medical context and time.
-
-The system should therefore store:
-
-- Schedule jurisdiction/source
-- Version/date
-- Applicable age range
-- Recommendation provenance
-
-Never silently treat one country's schedule as universal.
+FUL.HOUSE separates observed fact (what was actually recorded for this child) from recommendation (what a selected current schedule suggests). Schedule jurisdiction/source, version/date and recommendation provenance must be stored. No country's schedule is treated as universal.
 
 ---
 
 # 5. Medical Vault
 
-The Child House can contain a highly private Medical Vault.
+The Child House can contain a highly private Medical Vault: vaccinations, allergies, clinician-recorded diagnoses, medications, prescriptions, labs, imaging/reports, discharge summaries, procedures, insurance documents and medical contacts.
 
-Potential records:
-
-- Vaccinations
-- Allergies
-- Clinician-recorded diagnoses
-- Current/past medications
-- Prescriptions
-- Laboratory results
-- Imaging/reports
-- Discharge summaries
-- Procedures
-- Insurance documents
-- Relevant family-provided notes
-- Medical contacts
-
-The Butler can help retrieve and summarize stored information.
-
-Examples:
-
-> Show the latest blood test.
-
-> When was the last vaccination?
-
-> Prepare a concise history for a new pediatrician.
-
-A generated clinician summary can include age, allergies, medications, vaccination status, relevant recorded history, recent health events and questions the family wants to ask.
-
-AI summaries must retain provenance back to original records.
+The Butler can retrieve and summarize stored information and prepare concise clinician-facing histories. AI summaries retain provenance back to source records.
 
 ---
 
 # 6. Child Health Butler
 
-The user-facing experience may feel like a mini pediatric assistant, but internally it should be treated as a Child Health Butler rather than a diagnostic physician.
+The family Butler can provide child-health assistance while the Child House remains part of the parent/family structure. It can organize symptoms, maintain Health Events, retrieve history, explain general information, surface warning signs, prepare for clinician visits and summarize episodes.
 
-It can:
-
-- Organize symptoms over time
-- Ask structured follow-up questions
-- Maintain Health Events
-- Retrieve relevant history
-- Explain general health information
-- Surface warning signs that warrant medical attention
-- Help prepare for a clinician visit
-- Summarize a health episode
-
-It must not present uncertain diagnosis as established medical fact or replace professional pediatric care.
-
-Example Health Event:
-
-2026-08-15
-- Fever: 38.4 C
-- Cough
-- Started around 14:00
-- Parent observations
-- Subsequent temperature readings
-- Clinician visit/result if one occurs
-
-Over time the parent can ask:
-
-> When was the last similar fever episode?
-
-and the Butler retrieves the child's actual history.
+It must not present uncertain diagnoses as established medical fact or replace professional pediatric care.
 
 ---
 
 # 7. Development & Wellbeing
 
-FUL.HOUSE can support development and wellbeing without attempting to become an autonomous child psychologist.
+FUL.HOUSE can support development and wellbeing without becoming an autonomous child psychologist. Younger-child observations can include speech, movement, play, social interaction, sleep, eating and independence. Older-child/teen areas can include school, interests, sleep, stress, mood check-ins, friendships and activities.
 
-For younger children, structured observations can include:
-
-- Speech/language
-- Movement
-- Play
-- Social interaction
-- Sleep
-- Eating
-- Independence
-
-For older children and teenagers, owner/guardian-permitted areas may include:
-
-- School
-- Interests
-- Sleep
-- Stress
-- Mood check-ins
-- Friendships
-- Activities
-- Behavioral changes
-
-Validated age-appropriate screening instruments may be supported where licensing and clinical requirements allow, but results must be presented with appropriate context and should not be converted into diagnoses by a generic LLM.
+Validated age-appropriate screening instruments may be supported where licensing and clinical requirements allow, but generic LLM output must not be presented as a clinical diagnosis.
 
 ---
 
 # 8. Privacy transition as the child grows
 
-A child's data model must change with age and maturity.
+A child's data model changes with age and maturity. FUL.HOUSE progressively introduces their own login/account, rooms, connected services, private spaces and controls over what parents and visitors can view.
 
-A young child's House is primarily guardian-managed.
-
-As the child grows, FUL.HOUSE should progressively introduce:
-
-- Their own login/account
-- Their own rooms
-- Their own connected services
-- Private spaces
-- Controls over what parents can view
-- Controls over what visitors can view
-- Clear separation between family memories and personal communications
-
-A teenager's private conversation with their Butler must not automatically become a parental transcript.
-
-Safety/legal exceptions and parental-control behavior must be designed according to applicable law and platform requirements, not improvised by the AI.
+A teenager's private conversation must not automatically become a parental transcript. Safety/legal exceptions and parental-control behavior must follow applicable law and platform requirements rather than being improvised by AI.
 
 ---
 
 # 9. Child builds their own present
 
-Before full independence, an older child/teen can begin building their own House by connecting authorized accounts.
-
-Examples:
-
-Spotify → Music Room
-Instagram → selected memories/interests
-YouTube → selected interests/content
-GitHub → Workshop
-Gaming services → Gaming Room where supported
-Sports/activity sources → Sports area
-School/portfolio → Projects/Achievements
-
-This creates an important transition:
+Before full independence, an older child/teen can begin building their own space by connecting authorized accounts: Spotify → Music Room, Instagram → selected memories/interests, YouTube → selected interests, GitHub → Workshop, gaming → Gaming Room where supported, sports/activity → Sports area, school/portfolio → Projects/Achievements.
 
 **Parents contributed the past. The child begins building the present.**
-
-The child should not have to start a blank digital identity at adulthood.
 
 ---
 
@@ -296,22 +94,22 @@ The child should not have to start a blank digital identity at adulthood.
 
 The Child House is designed from the beginning to become the child's property/control space.
 
-Possible transition stages:
+Stages:
 
 ### Guardian-managed
 Parents/guardians create and maintain the early House.
 
 ### Shared stewardship
-The child gains their own account, can create spaces, connect services and manage selected privacy.
+The child gains their own account, creates spaces, connects services and manages selected privacy, but the Child House remains structurally connected to the Family House.
 
 ### Independent ownership
 At an appropriate configured/legal age and after required account/identity steps, control transfers to the child.
 
-Age alone should not be the only implementation rule globally. Jurisdiction, platform policy and family/account configuration may affect timing and required consent.
+Age alone is not the only implementation rule globally. Jurisdiction, platform policy and family/account configuration may affect timing and consent.
 
 ---
 
-# 11. Move Out
+# 11. Move Out — House separation
 
 At independence, the Child House can separate from the Family House.
 
@@ -319,11 +117,7 @@ Possible experience:
 
 > Your House is ready to become yours.
 
-The child receives their own address such as:
-
-`ful.house/name`
-
-Their childhood history remains part of their House subject to privacy and shared-memory rules.
+The child receives their own address such as `ful.house/name`. Their childhood history remains part of their House subject to privacy and shared-memory rules.
 
 Example metadata:
 
@@ -332,162 +126,157 @@ Independent since: 2044
 
 The visual metaphor can be literal: the child's space moves from the family property into its own location in the FUL.HOUSE neighborhood.
 
----
+## A new Butler is born at separation
 
-# 12. Connected House
+**House separation creates a new personal Butler.**
 
-Moving out does not require severing family relationships.
+The child does not simply inherit the parent's/family Butler as their permanent AI agent.
 
-An independent House can remain connected to the Family House.
+Before separation, the Family Butler may assist with the Child House under guardian and child permissions. At Move Out, FUL.HOUSE instantiates a new Butler identity belonging exclusively to the newly independent House.
 
-Possible shared connections:
+This is a major product ritual: **new House → new Butler → new private relationship.**
 
-- Family trips
-- Shared photos
-- Family pets
-- Family recipes
-- Family events
-- Selected places
-- Shared heritage objects
+The new Butler can receive an authorized bootstrap package containing the child's own history and memories, but not the parent's private memory or unrestricted Family Butler state.
 
-The connection is permissioned. Independence changes access rights even when memories remain linked.
+Possible bootstrap data:
 
----
+- The child's childhood timeline
+- Their rooms and objects
+- Their own connected accounts
+- Their preferences and interests
+- Their Medical Vault under the new ownership rules
+- Their vaccination history
+- Their travel memories
+- Their wardrobe
+- Their personal projects
+- Shared family memories to which they retain access
+- Their relationship to Family House and Family Estate
 
-# 13. Family Estate
+The new Butler then develops its own personal memory, behavioral adaptation and local model/adapter for this owner.
 
-Families may choose a broader Family Estate model.
+The parent's Butler remains with the parent's House.
 
-Instead of every adult House being visually unrelated, multiple independent Houses can exist within a shared family space.
-
-Important distinction:
-
-**Family Estate is a relationship between independently permissioned Houses, not a master account that permanently owns every family member's data.**
-
-Possible representation:
-
-Family Estate
-- Parent House
-- Parent/Partner House
-- Adult Child House
-- Adult Child House
-- Ancestral/Archive Houses where inherited
-
-Over generations, this can become a navigable family history.
+This separation is intentional. A Butler belongs to a House, not to an entire bloodline.
 
 ---
 
-# 14. Shared Memory Graph
+# 12. Butler privacy boundary after Move Out
 
-FUL.HOUSE should avoid blindly duplicating family memories into every account.
+After separation, the new Butler's private memory belongs to the independent owner.
 
-Instead, a shared memory can be a single logical object with participant-specific permissions and views.
+By default:
 
-Example:
+- Parent Butler cannot read child Butler private memory.
+- Child Butler cannot read parent Butler private memory.
+- Family Butler conversations do not automatically transfer as transcripts.
+- Shared memories remain accessible only according to Shared Memory Graph permissions.
+- Medical and wellbeing information follows the child's new ownership/privacy rules.
+- Each Butler may communicate with another House's Butler only through explicit inter-House permissions and defined tasks.
 
-Trip #8472 — Italy
-Participants:
-- Parent A
-- Parent B
-- Child A
-- Child B
+Example future behavior:
 
-Each participant can have:
+> Ask Dad's Butler for the family recipe.
 
-- Their own photos
-- Their own notes
-- Their own privacy settings
-- Their own derived memories
-
-while still referencing the same family Trip.
-
-This model can apply to:
-
-- Trips
-- Pets
-- Restaurants
-- Family events
-- Vehicles
-- Recipes
-- Albums
-- Places
-
-The Family House can show the shared family perspective while individual Houses show personal perspectives.
+This is a permissioned request between Houses, not shared unrestricted memory.
 
 ---
 
-# 15. Medical ownership transition
+# 13. Butler continuity without identity copying
 
-Medical data requires special handling during independence.
+The new Butler should not feel like an amnesiac stranger if the owner has a rich childhood history.
 
-The child's historical Medical Vault should transition into their own private control when legally and operationally appropriate.
+FUL.HOUSE therefore separates **history continuity** from **AI identity continuity**.
 
-Parents should not automatically retain indefinite access to an adult child's medical data merely because they originally uploaded it.
+History continuity: the new Butler can know the owner's authorized past.
 
-The system needs explicit rules for:
+AI identity continuity: the new Butler develops its own relationship, style, memory and personalization from the point of independence onward.
 
-- Guardian access
-- Child access
-- Transition age/state
-- Revocation
-- Emergency access if implemented
-- Shared records
-- Export
-- Deletion/retention obligations
+The Family Butler may optionally provide a signed/structured handoff summary such as important preferences, routines and historical context, subject to the new owner's approval.
 
-These rules require jurisdiction-specific legal review before implementation.
+The handoff must never silently copy private information about other family members.
 
 ---
 
-# 16. Travel integration
+# 14. Connected House
 
-Family travel can connect Child House, Medical Vault and Travel.
+Moving out does not sever family relationships. An independent House can remain connected to the Family House through permissioned links for family trips, shared photos, family pets, recipes, events, selected places and heritage objects.
 
-Before a trip, the Butler may help check authorized records such as:
-
-- Insurance document present
-- Vaccination certificate stored
-- Required regular medications included in packing checklist
-- Relevant prescription/document available
-
-This should be presented as organizational assistance, not medical clearance to travel.
+Independence changes access rights even when memories remain linked.
 
 ---
 
-# 17. Inheritance vs childhood transfer
+# 15. Family Estate
+
+Families may choose a Family Estate model where multiple independently permissioned Houses exist within a shared family space.
+
+**Family Estate is a relationship between Houses, not a master account that permanently owns every family member's data.**
+
+Possible structure: Parent House, Partner House, Adult Child Houses, ancestral/archive Houses where inherited.
+
+Each independent House has its own Butler.
+
+A Family Estate can therefore contain a network of Butlers, each loyal to and permissioned by its own House, capable of controlled cooperation when owners allow it.
+
+---
+
+# 16. Shared Memory Graph
+
+FUL.HOUSE avoids blindly duplicating family memories. A shared memory can be a single logical object with participant-specific permissions and views.
+
+Example: Trip #8472 — Italy, with Parent A, Parent B, Child A and Child B as participants. Each participant can have their own photos, notes, privacy and derived memories while referencing the same Trip.
+
+This applies to trips, pets, restaurants, family events, vehicles, recipes, albums and places.
+
+---
+
+# 17. Medical ownership transition
+
+The child's historical Medical Vault transitions into their own private control when legally and operationally appropriate. Parents should not automatically retain indefinite access to an adult child's medical data because they originally uploaded it.
+
+Rules are required for guardian access, child access, transition state, revocation, emergency access if implemented, shared records, export and retention/deletion obligations. Jurisdiction-specific legal review is required before implementation.
+
+The newly created personal Butler becomes the default conversational interface to the independent owner's Medical Vault, subject to these permissions.
+
+---
+
+# 18. Travel integration
+
+Family travel can connect Child House, Medical Vault and Travel. Before a trip, the Butler may help verify organizational items such as insurance documents, stored vaccination certificates, packing reminders for regular medication and relevant prescriptions. This is organizational assistance, not medical clearance.
+
+---
+
+# 19. Inheritance vs childhood transfer
 
 FUL.HOUSE has two distinct continuity mechanisms.
 
 ### Inheritance
-An existing owner passes selected House assets/memories/control according to inheritance rules.
+An existing owner passes selected House assets/memories/control according to inheritance rules. The inherited House may retain its historical Butler/archive behavior according to inheritance policy.
 
 ### Childhood transfer
-Parents/guardians progressively hand a child's own digital history to that child.
+Parents/guardians progressively hand a child's own digital history to that child. At full House separation, **a new personal Butler is created for that House**.
 
-These must not be treated as the same legal/product event.
-
-Childhood transfer is fundamentally about returning control of the person's own history to them.
+These are not the same event. Childhood transfer is about returning control of the person's own history to them and establishing an independent AI relationship.
 
 ---
 
-# 18. Core privacy principles
+# 20. Core privacy principles
 
 1. Child health data is highly sensitive and private by default.
-2. Public House objects must never expose medical records by default.
-3. Parent access should evolve as the child matures and applicable law requires.
+2. Public House objects never expose medical records by default.
+3. Parent access evolves as the child matures and applicable law requires.
 4. Private Butler conversations are not automatically family-visible.
-5. AI-generated summaries must remain linked to source records.
-6. Health recommendations must distinguish authoritative guidance from AI interpretation.
-7. The child should eventually control their own digital history.
+5. AI-generated summaries remain linked to source records.
+6. Health recommendations distinguish authoritative guidance from AI interpretation.
+7. The child eventually controls their own digital history.
 8. Shared family memories do not imply shared access to every associated private record.
-9. Account separation must preserve provenance and relationships without silently copying sensitive data.
-10. Location, medical and psychological/wellbeing data require especially strict access controls.
+9. Account separation preserves provenance and relationships without silently copying sensitive data.
+10. Location, medical and psychological/wellbeing data require especially strict controls.
+11. **A personal Butler belongs to its House.**
+12. House separation creates a new Butler and a new private memory boundary.
 
 ---
 
-# 19. MVP direction
-
-This is too sensitive and broad to ship as one undifferentiated feature.
+# 21. MVP direction
 
 Recommended early scope:
 
@@ -498,7 +287,7 @@ Recommended early scope:
 5. Private Medical Vault document storage.
 6. Guardian permissions.
 7. Shared family memory data model.
-8. Architecture designed for future ownership transfer.
+8. Architecture designed for future ownership transfer and Butler separation.
 
 Later phases:
 
@@ -508,7 +297,9 @@ Later phases:
 - Connected accounts
 - Progressive privacy
 - Move Out
+- New Butler creation and bootstrap
 - Connected Houses
+- Inter-Butler permission protocol
 - Family Estate
 - Full Medical Vault ownership transition
 
@@ -520,4 +311,6 @@ Later phases:
 
 **Parents build the beginning. The child builds the present. Eventually the House becomes theirs.**
 
-**Family history can remain connected without requiring family members to surrender individual privacy.**
+**When the House becomes independent, its owner gets their own Butler.**
+
+**Family history can remain connected without requiring family members or their Butlers to surrender individual privacy.**
