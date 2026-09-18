@@ -16,6 +16,7 @@
       const r=await fetch('/api/v1/auths/signin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:login.value.trim(),password:password.value}),signal:AbortSignal.timeout(30000)});
       const data=await r.json().catch(()=>null);
       if(!r.ok||!data?.token){resetLogin();return;}
+      localStorage.setItem('fh-last-activity',String(Date.now()));
       localStorage.setItem('token',data.token);
       sessionStorage.setItem('fh-start-after-login','1');
       feedback.textContent='Access granted.';

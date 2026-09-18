@@ -6,11 +6,17 @@ import os
 import psycopg
 
 class State:
+    def __init__(self):
+        self.revoked=set()
+
     def connection(self):
         return psycopg.AsyncConnection.connect(os.environ['DATABASE_URL'],connect_timeout=10)
 
     async def initialize(self):
         async with await self.connection() as conn:
+            await conn.execute('CREATE TABLE IF NOT EXISTS fulhouse_revoked_sessions (fingerprint TEXT PRIMARY KEY)')
+            cur=await conn.execute('SELECT fingerprint FROM fulhouse_revoked_sessions')
+            self.revoked={row[0] for row in await cur.fetchall()}
             await conn.execute('CREATE TABLE IF NOT EXISTS fulhouse_runtime (id TEXT PRIMARY KEY, pod_id TEXT)')
             await conn.execute('CREATE TABLE IF NOT EXISTS fulhouse_login_attempts (client TEXT PRIMARY KEY, attempts INTEGER NOT NULL, started TIMESTAMPTZ NOT NULL, blocked_until TIMESTAMPTZ)')
 
@@ -43,3 +49,14 @@ class State:
     async def reset_login(self,client):
         async with await self.connection() as conn:
             await conn.execute('DELETE FROM fulhouse_login_attempts WHERE client=%s',(client,))
+
+    def is_revoked(self,token):
+        return hashlib.sha256(token.encode()).hexdigest() in self.revoked
+
+    async def revoke(self,token):
+        from open_webui.utils.auth import decode_token
+        if not decode_token(token):return
+        fingerprint=hashlib.sha256(token.encode()).hexdigest()
+        async with await self.connection() as conn:
+            await conn.execute('INSERT INTO fulhouse_revoked_sessions VALUES (%s) ON CONFLICT DO NOTHING',(fingerprint,))
+        self.revoked.add(fingerprint)

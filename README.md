@@ -47,3 +47,11 @@ The legacy website, including previously uncommitted local work, is preserved in
 File uploads currently use ephemeral Heroku storage; do not use this deployment as a document archive. Code execution, code interpreter and web search are disabled. Image generation is a separate future integration; this deployment provides the coding chat model.
 
 Login attempts are limited per source IP: 12 attempts per window, followed by a 15-minute lock. Successful authentication resets the counter. Failed login never deletes user data.
+
+## Inactivity
+
+A shared edge-served script covers chat, terminal login and the cold-start page. After 60 seconds without trusted mouse, touch, keyboard or wheel input, a full-screen green Matrix animation covers the page. The first wake input dismisses it without submitting or clicking controls underneath. Background inference and polling do not reset this timer. Activity is synchronized between tabs.
+
+After 20 minutes of human inactivity, authenticated tabs call the upstream signout endpoint, clear local authentication and return to `/auth`. Wall-clock deadlines are checked before wake input and on page visibility changes, so a sleeping laptop cannot revive an expired session. When offline, local authentication is cleared and the private page is left; the signout request cannot be guaranteed to reach the server until connectivity exists. This is a browser idle logout, not an API-token lifetime policy.
+
+Run timer boundary and wake-event tests with `node --test tests/test_idle.cjs`.

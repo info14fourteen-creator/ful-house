@@ -1,3 +1,4 @@
+from http.cookies import SimpleCookie
 import hmac
 import json
 import os
@@ -14,6 +15,20 @@ class Guard:
         if not expected or not hmac.compare_digest(secret,expected):
             if scope['type']=='websocket': return await send({'type':'websocket.close','code':1008})
             return await JSONResponse({'detail':'Forbidden'},403)(scope,receive,send)
+        if self.limiter:
+            token=''
+            authorization=headers.get(b'authorization',b'').decode()
+            if authorization.lower().startswith('bearer '):token=authorization[7:].strip()
+            else:
+                cookies=SimpleCookie()
+                try:cookies.load(headers.get(b'cookie',b'').decode())
+                except Exception:pass
+                if 'token' in cookies:token=cookies['token'].value
+            signout=scope['type']=='http' and scope.get('method')=='POST' and path=='/api/v1/auths/signout'
+            signin=path=='/api/v1/auths/signin'
+            if token and not signin and not signout and self.limiter.is_revoked(token):
+                if scope['type']=='websocket':return await send({'type':'websocket.close','code':1008})
+                return await JSONResponse({'detail':'Session expired'},401)(scope,receive,send)
         if scope['type']=='http':
             if path.startswith('/api/v1/auths/signup'):
                 return await JSONResponse({'detail':'Регистрация закрыта'},403)(scope,receive,send)
@@ -21,6 +36,9 @@ class Guard:
                 origin=headers.get(b'origin',b'').decode()
                 if origin and origin!=os.getenv('WEBUI_URL','https://ful.house'):
                     return await JSONResponse({'detail':'Invalid origin'},403)(scope,receive,send)
+        if self.limiter and token and signout:
+            try:await self.limiter.revoke(token)
+            except Exception:return await JSONResponse({'detail':'Unavailable'},503)(scope,receive,send)
         if scope['type']=='http' and path=='/api/v1/auths/signin' and scope['method']=='POST':
             if self.limiter:
                 client=self.limiter.client_key(headers)

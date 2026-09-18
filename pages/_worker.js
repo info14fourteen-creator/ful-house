@@ -3,7 +3,7 @@ export default {
     const url = new URL(request.url);
     if (['/favicon.ico','/favicon.png','/static/favicon.png','/static/favicon.ico','/static/fulhouse-icon.png'].includes(url.pathname)) return env.ASSETS.fetch(new URL('/static/fulhouse-icon.png',url));
     if (url.pathname==='/favicon.svg') return env.ASSETS.fetch(request);
-    if (['/static/homebrew.css','/static/matrix.js','/static/terminal-login.css','/static/terminal-login.js'].includes(url.pathname)) {
+    if (['/static/homebrew.css','/static/matrix.js','/static/terminal-login.css','/static/terminal-login.js','/static/idle.js','/static/idle.css'].includes(url.pathname)) {
       const asset=await env.ASSETS.fetch(request);
       const response=new Response(asset.body,asset);
       response.headers.set('Cache-Control','no-cache');
@@ -56,6 +56,7 @@ export default {
     response.headers.set('X-Robots-Tag','noindex, nofollow');
     if ((response.headers.get('content-type') || '').includes('text/html')) {
       return new HTMLRewriter()
+        .on('head', {element(e){e.append('<link rel="stylesheet" href="/static/idle.css?v=idle-1"><script defer src="/static/idle.js?v=idle-1"></script>',{html:true});}})
         .on('link[href="/static/homebrew.css"]', {element(e){e.setAttribute('href','/static/homebrew.css?v=startup-4');}})
         .on('script[src="/static/matrix.js"]', {element(e){e.setAttribute('src','/static/matrix.js?v=startup-4');}})
         .transform(response);

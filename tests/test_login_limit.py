@@ -7,7 +7,7 @@ from starlette.responses import JSONResponse
 
 class LoginLimitTests(unittest.IsolatedAsyncioTestCase):
     async def run_login(self,allowed=True,status=200,error=False):
-        limiter=Mock();limiter.client_key.return_value='client'
+        limiter=Mock();limiter.is_revoked.return_value=False;limiter.client_key.return_value='client'
         limiter.allow_login=AsyncMock(return_value=allowed,side_effect=RuntimeError() if error else None)
         limiter.reset_login=AsyncMock()
         calls=[]
