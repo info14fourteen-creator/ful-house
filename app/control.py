@@ -103,7 +103,7 @@ class Controller:
     async def idle_watch(self):
         while True:
             await asyncio.sleep(20)
-            if self.phase=='ready' and not self.active and time.monotonic()-self.last_activity >= self.idle_seconds:
+            if self.key and not self.active and (self.phase=='error' or (self.phase=='ready' and time.monotonic()-self.last_activity >= self.idle_seconds)):
                 await self.stop()
 
     async def begin_request(self):

@@ -12,6 +12,7 @@ from open_webui.utils.auth import get_admin_user
 from open_webui.models.auths import Auths
 from open_webui.models.users import Users
 from app.control import Controller, MODEL
+from app.bridge import start_bridge
 
 control=Controller()
 original_lifespan=upstream.router.lifespan_context
@@ -25,11 +26,13 @@ async def lifespan(app):
             await Auths.insert_new_auth(email='steelstan@ful.house',password=password_hash,name='steelstan',role='admin')
         if control.key:
             await control.stop()
+        bridge=await start_bridge(control)
         task=asyncio.create_task(control.idle_watch())
         try: yield
         finally:
             task.cancel()
             with suppress(asyncio.CancelledError): await task
+            await bridge.cleanup()
             await control.close_tunnel()
 
 upstream.router.lifespan_context=lifespan
@@ -96,12 +99,6 @@ class Guard:
                     return {'type':'http.request','body':body,'more_body':False}
                 return await original_receive()
             receive=replay
-        tracked=False
-        if scope['type']=='http' and scope['method']=='POST' and path in ('/api/chat/completions','/ollama/api/chat','/ollama/api/generate'):
-            tracked=await control.begin_request()
-        try:
-            return await self.app(scope,receive,send)
-        finally:
-            if tracked: await control.end_request()
+        return await self.app(scope,receive,send)
 
 app=Guard(upstream)
