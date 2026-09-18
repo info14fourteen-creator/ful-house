@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Комбинации покера — учебный гид Fullhouse Poker AI</title>
+    <meta name="description" content="Комбинации покера в Texas Hold'em: порядок от старшей карты до роял-флеша, кикер, split pot и частые ошибки новичка. Educational/play-money only.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://ful.house/poker-combinations.html">
+    <link rel="alternate" hreflang="ru" href="https://ful.house/poker-combinations.html">
+    <link rel="alternate" hreflang="x-default" href="https://ful.house/poker-combinations.html">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#08110e">
+    <meta property="og:site_name" content="Fullhouse Poker AI">
+    <meta property="og:title" content="Комбинации покера — учебный гид">
+    <meta property="og:description" content="Порядок комбинаций, правило пяти карт, кикер и частые ошибки новичка без casino и real-money framing.">
+    <meta property="og:url" content="https://ful.house/poker-combinations.html">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="ru_RU">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Комбинации покера — учебный гид">
+    <meta name="twitter:description" content="От старшей карты до роял-флеша: что сильнее, как работает кикер и когда банк делится.">
+    <link rel="stylesheet" href="assets/styles.css?v=poker-sim-1">
+  </head>
+  <body class="home-poker">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="index.html" aria-label="Фулхаус Poker AI">
+          <span class="brand-mark">FH</span>
+          <span class="brand-text">Фулхаус<small>Poker AI Trainer</small></span>
+        </a>
+        <nav class="nav" data-nav>
+          <a href="index.html#diagnostic">Диагностика</a>
+          <a href="index.html#learning">Обучение</a>
+          <a href="index.html#agents">Тренажер</a>
+          <a class="is-active" href="poker-combinations.html">Статьи</a>
+          <a href="index.html#tournaments">Турниры</a>
+          <a href="index.html#news">Новости</a>
+        </nav>
+        <div class="header-actions">
+          <a class="header-link" href="index.html#plan">План</a>
+          <a class="lang-switch" href="en/index.html">EN</a>
+          <a class="button primary" href="index.html#diagnostic">Определить уровень</a>
+          <button class="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false" data-menu-toggle>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero short">
+        <div class="hero-content">
+          <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="index.html">Главная</a>
+            <span>Обучение</span>
+            <span>Комбинации покера</span>
+          </nav>
+          <p>Учебный материал • 18+ • Play-money only</p>
+          <h1>Комбинации покера: что сильнее, как считать лучшие пять карт и почему две красивые карманки не всегда побеждают.</h1>
+          <p>Этот guide продолжает базовые правила Texas Hold'em и нужен игроку уровня First Hand - Beginner, чтобы быстро запомнить порядок комбинаций, принцип кикера, split pot и типичные ошибки чтения борда.</p>
+          <div class="guide-meta">
+            <span>Foundation guide</span>
+            <span>Для уровней First Hand - Beginner</span>
+            <span>8 минут чтения</span>
+          </div>
+          <div class="hero-actions">
+            <a class="button primary" href="index.html#diagnostic">Проверить себя в диагностике</a>
+            <a class="button secondary" href="#ranking">Сначала выучить порядок комбинаций</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section compact">
+        <div class="container guide-overview">
+          <div class="guide-main">
+            <div class="guide-jump-card">
+              <strong>Быстрый переход по материалу</strong>
+              <div class="guide-jumps">
+                <a href="#ranking">Порядок комбинаций</a>
+                <a href="#five-cards">Правило 5 карт</a>
+                <a href="#kicker">Кикер и сравнение</a>
+                <a href="#board-reading">Как читать борд</a>
+                <a href="#mistakes">Частые ошибки</a>
+                <a href="#faq">FAQ</a>
+              </div>
+            </div>
+          </div>
+          <aside class="guide-side">
+            <article class="guide-side-card">
+              <small>Связанный guide</small>
+              <strong>Сначала правила, потом комбинации</strong>
+              <p>Если еще не уверены в порядке улиц, button и legal actions, сначала пройдите базовый материал по правилам Hold'em, а потом возвращайтесь к силе рук.</p>
+              <a class="button secondary" href="texas-holdem-rules.html">Открыть правила Hold'em</a>
+            </article>
+            <article class="guide-side-card">
+              <small>После чтения</small>
+              <strong>Что тренировать сразу</strong>
+              <p>Проверьте, как быстро вы распознаете готовые руки, дро и split pot-ситуации, а затем переходите к короткой диагностике решений.</p>
+            </article>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="ranking">
+        <div class="container split guide-split">
+          <div class="text-block">
+            <h2>Порядок комбинаций от слабой к сильной</h2>
+            <p>В Texas Hold'em всегда сравнивается лучшая комбинация из пяти карт. Не все семь карт сразу, не ваши две карманные отдельно и не "картинка" руки в целом. Именно поэтому новичку важно запомнить точный порядок комбинаций и не угадывать их на глаз.</p>
+            <p>Полезное правило: если вы сомневаетесь, кто впереди, сначала назовите тип комбинации, потом сравните старшую карту внутри нее и только после этого думайте о кикере.</p>
+          </div>
+          <div class="card">
+            <h3>Что нужно вынести с этой страницы</h3>
+            <ul>
+              <li>какая комбинация старше другой без путаницы;</li>
+              <li>почему в зачет идут только лучшие пять карт;</li>
+              <li>как работает кикер, если тип руки одинаковый;</li>
+              <li>когда board сам собирает общую руку и банк делится;</li>
+              <li>какие визуальные ловушки чаще всего путают новичка.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt">
+        <div class="container">
+          <div class="section-head">
+            <h2>Таблица комбинаций</h2>
+            <p>Смотрите на нее как на опорную шкалу для диагностики и учебных раздач. На реальном столе решение начинается не с желания "доехать", а с трезвой оценки того, какая рука уже собрана и что может быть сильнее.</p>
+          </div>
+          <div class="grid three">
+            <article class="card">
+              <h3>1. Старшая карта</h3>
+              <p>Нет пары и выше; сравнивается самая старшая карта, затем следующие.</p>
+            </article>
+            <article class="card">
+              <h3>2. Одна пара</h3>
+              <p>Две карты одного достоинства, например две дамы.</p>
+            </article>
+            <article class="card">
+              <h3>3. Две пары</h3>
+              <p>Две отдельные пары, например валеты и восьмерки.</p>
+            </article>
+            <article class="card">
+              <h3>4. Сет / трипс</h3>
+              <p>Три карты одного достоинства.</p>
+            </article>
+            <article class="card">
+              <h3>5. Стрит</h3>
+              <p>Пять карт подряд по рангу, масть не важна.</p>
+            </article>
+            <article class="card">
+              <h3>6. Флеш</h3>
+              <p>Пять карт одной масти, порядок рангов между ними не обязателен.</p>
+            </article>
+            <article class="card">
+              <h3>7. Фул-хаус</h3>
+              <p>Сет плюс пара.</p>
+            </article>
+            <article class="card">
+              <h3>8. Каре</h3>
+              <p>Четыре карты одного достоинства.</p>
+            </article>
+            <article class="card">
+              <h3>9. Стрит-флеш</h3>
+              <p>Пять последовательных карт одной масти.</p>
+            </article>
+            <article class="card">
+              <h3>10. Роял-флеш</h3>
+              <p>Десятка, валет, дама, король и туз одной масти.</p>
+            </article>
+          </div>
+          <div class="seo-note">Новички часто путают стрит и флеш по "красоте" картинки. Запомните: флеш сильнее стрита, а фул-хаус сильнее флеша.</div>
+        </div>
+      </section>
+
+      <section class="section" id="five-cards">
+        <div class="container">
+          <div class="section-head">
+            <h2>Правило пяти карт важнее, чем кажется</h2>
+            <p>У вас может быть семь доступных карт, но комбинация всегда строится только из лучших пяти. Это ключевая мысль, без которой пользователь неправильно читает шоудаун и переоценивает свои карманные карты.</p>
+          </div>
+          <div class="grid three">
+            <article class="card">
+              <h3>Карманки не обязаны участвовать</h3>
+              <p>Иногда лучшая комбинация целиком лежит на board. Тогда ваши две закрытые карты не улучшают руку вообще.</p>
+            </article>
+            <article class="card">
+              <h3>Обе карманки тоже не обязательны</h3>
+              <p>Можно использовать одну закрытую карту или ни одной, если board уже дает лучшую пятикарточную руку.</p>
+            </article>
+            <article class="card">
+              <h3>Board может делить банк</h3>
+              <p>Если лучшие пять карт для двух игроков совпадают полностью, банк делится, даже если одна рука визуально кажется "красивее".</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt" id="kicker">
+        <div class="container split guide-split">
+          <div class="text-block">
+            <h2>Как работает кикер и сравнение одинаковых рук</h2>
+            <p>Если тип комбинации у игроков одинаковый, смотрят на старшую карту внутри этой комбинации или на кикер. Например, пара тузов с королем кикером сильнее пары тузов с валетом кикером.</p>
+            <p>Для двух пар сначала сравнивают старшую пару, потом младшую и только потом кикер. Для стрита или флеша сравнение идет по самой старшей карте в пятерке. Если и она одинакова, банк делится.</p>
+          </div>
+          <div class="card">
+            <h3>Быстрый алгоритм сравнения</h3>
+            <ul>
+              <li>сначала определите тип комбинации у каждого игрока;</li>
+              <li>если тип разный, сильнее старшая комбинация по таблице;</li>
+              <li>если тип одинаковый, сравните старшую значимую карту;</li>
+              <li>если нужно, переходите к кикеру;</li>
+              <li>если лучшие пять карт равны полностью, это split pot.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="board-reading">
+        <div class="container">
+          <div class="section-head">
+            <h2>Как читать борд без паники</h2>
+            <p>На практике новичок чаще ошибается не в названии комбинации, а в том, что не замечает возможный стрит, второй флеш на доске или общую руку на board. Эти ошибки потом напрямую влияют на call discipline и showdown decisions.</p>
+          </div>
+          <div class="check-grid">
+            <article class="check-item">
+              <strong>Смотрите на пять карт, а не на две</strong>
+              <span>Сначала оцените board, потом добавьте свои карманные карты и соберите лучшую пятерку.</span>
+            </article>
+            <article class="check-item">
+              <strong>Проверяйте последовательность</strong>
+              <span>Если на столе почти подряд идут карты, не пропустите возможный стрит у себя или у соперника.</span>
+            </article>
+            <article class="check-item">
+              <strong>Следите за мастью</strong>
+              <span>Три или четыре карты одной масти на board резко меняют ценность пары и двух пар.</span>
+            </article>
+            <article class="check-item">
+              <strong>Ищите общий board</strong>
+              <span>Иногда board уже собрал стрит или флеш для всех, и ваша "особенная" карманка не дает преимущества.</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt" id="mistakes">
+        <div class="container">
+          <div class="section-head">
+            <h2>Что чаще всего путает новичка</h2>
+            <p>Эти ошибки особенно важны для первых учебных сессий, потому что они ломают и чтение шоудауна, и понимание силы руки по улицам.</p>
+          </div>
+          <div class="check-grid">
+            <article class="check-item">
+              <strong>Флеш кажется слабее стрита</strong>
+              <span>Из-за визуальной привычки игрок считает последовательность "круче", хотя флеш стоит выше.</span>
+            </article>
+            <article class="check-item">
+              <strong>Пара в руке переоценивается</strong>
+              <span>Игрок держится за карманную пару, не замечая, что board уже дал сопернику стрит, флеш или фул-хаус.</span>
+            </article>
+            <article class="check-item">
+              <strong>Кикер забывается полностью</strong>
+              <span>Игрок видит одинаковую пару и думает, что банк делится, хотя решает именно старшая боковая карта.</span>
+            </article>
+            <article class="check-item">
+              <strong>Board hand не распознается</strong>
+              <span>На столе уже лежит общая сильная рука для всех, но игрок ошибочно думает, что выигрывает за счет "своих" картинок.</span>
+            </article>
+            <article class="check-item">
+              <strong>Семь карт сравниваются как попало</strong>
+              <span>Вместо лучшей пятерки новичок mentally складывает все карты сразу и получает неверный вывод о силе руки.</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section compact" id="faq">
+        <div class="container">
+          <div class="section-head">
+            <h2>Быстрые ответы</h2>
+            <p>Этот FAQ нужен, чтобы материал одинаково легко читался на desktop web, mobile web и в коротких summary-модулях для Mini App.</p>
+          </div>
+          <div class="faq">
+            <details>
+              <summary>Что сильнее: стрит или флеш?</summary>
+              <p>Флеш сильнее стрита. Пять карт одной масти стоят выше, чем пять карт подряд разных мастей.</p>
+            </details>
+            <details>
+              <summary>Что сильнее: сет или две пары?</summary>
+              <p>Сет сильнее двух пар. Три карты одного достоинства идут выше, чем две отдельные пары.</p>
+            </details>
+            <details>
+              <summary>Всегда ли мои две карманные карты участвуют в комбинации?</summary>
+              <p>Нет. В зачет идут любые лучшие пять карт из семи доступных, поэтому иногда используется одна карманная карта или ни одной.</p>
+            </details>
+            <details>
+              <summary>Когда банк делится?</summary>
+              <p>Когда лучшие пять карт у игроков совпадают по типу и по старшинству полностью. Это split pot.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>Как превратить знание комбинаций в практику</h2>
+            <p>После этой страницы лучший следующий шаг не в том, чтобы заучивать еще больше терминов, а в том, чтобы проверить распознавание силы руки внутри реальных учебных спотов.</p>
+          </div>
+          <div class="article-links guide-links">
+            <a href="texas-holdem-rules.html">Вернуться к правилам Hold'em и закрепить порядок улиц и legal actions</a>
+            <a href="index.html#diagnostic">Пройти диагностику и проверить, где вы ошибаетесь в чтении руки и board texture</a>
+            <a href="index.html#levels">Сверить текущий verdict с уровнями 0-6 и понять следующий учебный маршрут</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="band poker-band">
+        <div class="band-inner">
+          <div>
+            <h2>Комбинации полезны только тогда, когда вы быстро узнаете их в действии</h2>
+            <p>После foundation guide переходите в короткую диагностику и тренировочные раздачи. Платформа остается educational/play-money only без real-money механик.</p>
+          </div>
+          <a class="button secondary" href="index.html#diagnostic">Открыть диагностику</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div>
+          <strong>Фулхаус Poker AI</strong>
+          <p>Учебные раздачи, диагностика уровня, AI-разборы и собственные обучающие материалы.</p>
+          <nav class="footer-nav">
+            <a href="index.html#diagnostic">Диагностика</a>
+            <a href="index.html#learning">Обучение</a>
+            <a href="texas-holdem-rules.html">Правила</a>
+            <a href="poker-combinations.html">Комбинации</a>
+            <a href="index.html#tournaments">Турниры</a>
+            <a href="index.html#news">Новости</a>
+          </nav>
+        </div>
+        <div class="footer-meta">
+          <p>Educational / play-money only</p>
+          <p>© <span data-year></span> Fullhouse LLC</p>
+        </div>
+      </div>
+    </footer>
+    <script src="assets/site.js?v=poker-sim-1"></script>
+  </body>
+</html>

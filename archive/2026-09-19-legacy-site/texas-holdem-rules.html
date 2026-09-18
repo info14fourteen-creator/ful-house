@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Правила Texas Hold'em — учебный гид Fullhouse Poker AI</title>
+    <meta name="description" content="Понятные правила Texas Hold'em: цель игры, блайнды, порядок торговли, улицы, шоудаун и частые ошибки новичка. Educational/play-money only.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://ful.house/texas-holdem-rules.html">
+    <link rel="alternate" hreflang="ru" href="https://ful.house/texas-holdem-rules.html">
+    <link rel="alternate" hreflang="x-default" href="https://ful.house/texas-holdem-rules.html">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#08110e">
+    <meta property="og:site_name" content="Fullhouse Poker AI">
+    <meta property="og:title" content="Правила Texas Hold'em — учебный гид">
+    <meta property="og:description" content="Разбираем структуру раздачи, действия игрока и логику шоудауна без casino и real-money framing.">
+    <meta property="og:url" content="https://ful.house/texas-holdem-rules.html">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="ru_RU">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Правила Texas Hold'em — учебный гид">
+    <meta name="twitter:description" content="Цель игры, блайнды, порядок торговли, улицы и шоудаун в одном понятном материале.">
+    <link rel="stylesheet" href="assets/styles.css?v=poker-sim-1">
+  </head>
+  <body class="home-poker">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="index.html" aria-label="Фулхаус Poker AI">
+          <span class="brand-mark">FH</span>
+          <span class="brand-text">Фулхаус<small>Poker AI Trainer</small></span>
+        </a>
+        <nav class="nav" data-nav>
+          <a href="index.html#diagnostic">Диагностика</a>
+          <a href="index.html#learning">Обучение</a>
+          <a href="index.html#agents">Тренажер</a>
+          <a class="is-active" href="texas-holdem-rules.html">Статьи</a>
+          <a href="index.html#tournaments">Турниры</a>
+          <a href="index.html#news">Новости</a>
+        </nav>
+        <div class="header-actions">
+          <a class="header-link" href="index.html#plan">План</a>
+          <a class="lang-switch" href="en/index.html">EN</a>
+          <a class="button primary" href="index.html#diagnostic">Определить уровень</a>
+          <button class="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false" data-menu-toggle>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero short">
+        <div class="hero-content">
+          <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="index.html">Главная</a>
+            <span>Обучение</span>
+            <span>Правила Texas Hold'em</span>
+          </nav>
+          <p>Учебный материал • 18+ • Play-money only</p>
+          <h1>Правила Texas Hold'em: как устроена раздача, кто ходит первым и когда рука уже закончена.</h1>
+          <p>Этот foundation guide нужен новичку и recreational-игроку, который хочет быстро понять цель игры, обязательные ставки, порядок торговли, улицы и шоудаун, а затем перейти в диагностику и учебные раздачи.</p>
+          <div class="guide-meta">
+            <span>Foundation guide</span>
+            <span>Для уровней First Hand - Beginner</span>
+            <span>7 минут чтения</span>
+          </div>
+          <div class="hero-actions">
+            <a class="button primary" href="index.html#diagnostic">Пройти диагностику после чтения</a>
+            <a class="button secondary" href="#hand-flow">Сначала разобрать структуру раздачи</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section compact">
+        <div class="container guide-overview">
+          <div class="guide-main">
+            <div class="guide-jump-card">
+              <strong>Быстрый переход по материалу</strong>
+              <div class="guide-jumps">
+                <a href="#basics">База стола</a>
+                <a href="#seating">Позиции и блайнды</a>
+                <a href="#hand-flow">Ход раздачи</a>
+                <a href="#actions">Legal actions</a>
+                <a href="#showdown">Шоудаун</a>
+                <a href="#mistakes">Частые ошибки</a>
+                <a href="#faq">FAQ</a>
+              </div>
+            </div>
+          </div>
+          <aside class="guide-side">
+            <article class="guide-side-card">
+              <small>После чтения</small>
+              <strong>Что тренировать сразу</strong>
+              <p>Начните с диагностики на 10-20 учебных рук, чтобы проверить позицию, fold discipline и понимание порядка торговли.</p>
+              <a class="button secondary" href="index.html#diagnostic">Открыть диагностику</a>
+            </article>
+            <article class="guide-side-card">
+              <small>Мини-контракт</small>
+              <strong>Чему учит этот гид</strong>
+              <p>Не выигрышу денег, а базовой структуре решения: кто ставит блайнды, кто ходит первым, как открываются улицы и когда ваша рука уже не стоит продолжения.</p>
+            </article>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="basics">
+        <div class="container split guide-split">
+          <div class="text-block">
+            <h2>Что нужно понять в первую очередь</h2>
+            <p>В Texas Hold'em каждый игрок получает две закрытые карты. Затем на стол постепенно выкладываются пять общих карт, и задача игрока состоит в том, чтобы собрать лучшую пятикарточную комбинацию из семи доступных карт или заставить соперников выбросить карты раньше шоудауна.</p>
+            <p>Это учебный гид, а не casino-страница. Поэтому фокус здесь на порядке действий, логике ставок и том, какие решения чаще всего ломают руку у новичка еще до того, как он успевает подумать о стратегии глубже.</p>
+          </div>
+          <div class="card">
+            <h3>На этой странице</h3>
+            <ul>
+              <li>цель раздачи и базовые элементы стола;</li>
+              <li>что такое button, small blind, big blind и почему порядок хода меняется по улицам;</li>
+              <li>как проходят preflop, flop, turn, river и showdown;</li>
+              <li>какие действия игрока легальны в каждой точке и что они значат;</li>
+              <li>как определяется победитель и когда банк делится;</li>
+              <li>какие ошибки мешают учиться уже на первых сессиях.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt">
+        <div class="container">
+          <div class="section-head">
+            <h2>База стола: карты, блайнды и позиции</h2>
+            <p>Новичку важно быстро увидеть не только карты, но и структуру, из-за которой одно и то же действие может быть хорошим в позиции и слабым без позиции.</p>
+          </div>
+          <div class="grid three">
+            <article class="card">
+              <h3>Цель игры</h3>
+              <p>Либо показать лучшую пятикарточную комбинацию на шоудауне, либо выиграть банк раньше, если соперники выбросили карты.</p>
+            </article>
+            <article class="card">
+              <h3>Семь карт, но комбинация из пяти</h3>
+              <p>Вы используете любые пять карт из своих двух закрытых и пяти общих. Не обязательно брать обе карманные карты, и не обязательно использовать все карты борда.</p>
+            </article>
+            <article class="card">
+              <h3>Блайнды</h3>
+              <p>Перед раздачей два игрока ставят обязательные ставки: small blind и big blind. Они запускают игру и создают первый банк.</p>
+            </article>
+            <article class="card">
+              <h3>Позиция</h3>
+              <p>Позиция показывает, кто действует раньше и кто позже. Чем позже ваше решение, тем больше информации вы уже увидели.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="seating">
+        <div class="container split guide-split">
+          <div class="text-block">
+            <h2>Button, small blind, big blind и порядок хода</h2>
+            <p>В каждой новой раздаче позиция button сдвигается на одно место по часовой стрелке. Это важно, потому что вместе с button двигаются и обязательные ставки: игрок слева от button ставит small blind, следующий за ним ставит big blind.</p>
+            <p>До флопа первым обычно принимает решение игрок слева от big blind. После флопа первым действует игрок слева от button, если он еще в раздаче. Button обычно действует последним на postflop-улицах и поэтому получает больше информации.</p>
+          </div>
+          <div class="card">
+            <h3>Запомнить проще так</h3>
+            <ul>
+              <li>button показывает, где находится поздняя позиция в этой раздаче;</li>
+              <li>small blind и big blind создают стартовый банк до выдачи карт;</li>
+              <li>preflop и postflop начинаются не с одного и того же игрока;</li>
+              <li>поздняя позиция почти всегда удобнее, потому что решение принимается позже.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="hand-flow">
+        <div class="container prose-grid">
+          <div class="text-block">
+            <h2>Как проходит одна раздача</h2>
+            <p>Структура Texas Hold'em строится по улицам. Это важно, потому что диагностика и AI-разбор на платформе оценивают не только результат, но и качество решения на каждой улице.</p>
+            <div class="seo-note">Запомните простое правило: сначала вы принимаете решение с двумя закрытыми картами, потом по мере открытия общих карт заново сравниваете силу руки, позицию, размер банка и давление соперников.</div>
+          </div>
+          <div class="rail">
+            <article class="rail-item">
+              <div class="rail-num">1</div>
+              <div>
+                <h3>Preflop</h3>
+                <p>Каждый игрок получает две закрытые карты. Торговля начинается после обязательных блайндов, и вы решаете, стоит ли вообще продолжать руку.</p>
+              </div>
+            </article>
+            <article class="rail-item">
+              <div class="rail-num">2</div>
+              <div>
+                <h3>Flop</h3>
+                <p>На стол выкладываются три общие карты. Игроки оценивают, усилилась ли их рука, кому подходит доска и кто может ставить первым.</p>
+              </div>
+            </article>
+            <article class="rail-item">
+              <div class="rail-num">3</div>
+              <div>
+                <h3>Turn</h3>
+                <p>Появляется четвертая общая карта. Решения становятся дороже, а случайные коллы чаще превращаются в ошибку, потому что впереди уже только river.</p>
+              </div>
+            </article>
+            <article class="rail-item">
+              <div class="rail-num">4</div>
+              <div>
+                <h3>River</h3>
+                <p>На стол выходит пятая и последняя общая карта. После нее остается финальный раунд торговли.</p>
+              </div>
+            </article>
+            <article class="rail-item">
+              <div class="rail-num">5</div>
+              <div>
+                <h3>Showdown</h3>
+                <p>Если в раздаче осталось больше одного игрока, карты вскрываются, и лучшая комбинация забирает банк.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt" id="actions">
+        <div class="container">
+          <div class="section-head">
+            <h2>Какие действия игрока вообще доступны</h2>
+            <p>Внутри платформы legal actions показываются явно, чтобы новичок не гадал. Те же базовые действия работают и в реальной структуре Hold'em.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Действие</th>
+                  <th>Когда доступно</th>
+                  <th>Что означает</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Fold</strong></td>
+                  <td>Когда вы не хотите продолжать руку</td>
+                  <td>Выбрасываете карты и отказываетесь от банка в этой раздаче.</td>
+                </tr>
+                <tr>
+                  <td><strong>Check</strong></td>
+                  <td>Когда до вас никто не поставил</td>
+                  <td>Передаете ход дальше, не вкладывая дополнительные фишки.</td>
+                </tr>
+                <tr>
+                  <td><strong>Call</strong></td>
+                  <td>Когда уже есть ставка</td>
+                  <td>Уравниваете текущую ставку и продолжаете смотреть следующую карту или шоудаун.</td>
+                </tr>
+                <tr>
+                  <td><strong>Bet</strong></td>
+                  <td>Когда до вас все прочекали</td>
+                  <td>Делаете первую ставку в этом раунде торговли.</td>
+                </tr>
+                <tr>
+                  <td><strong>Raise</strong></td>
+                  <td>Когда уже есть ставка и вы хотите увеличить давление</td>
+                  <td>Повышаете размер текущей ставки и заставляете соперников принимать новое решение.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="seo-note">Если до вас уже поставили, check больше недоступен. Если ставки нет, call тоже недоступен. Новички часто ошибаются именно в этом: они думают о силе своих карт, но забывают смотреть на состояние торгового раунда.</div>
+        </div>
+      </section>
+
+      <section class="section" id="showdown">
+        <div class="container split guide-split">
+          <div class="text-block">
+            <h2>Что происходит на шоудауне</h2>
+            <p>Если после river в раздаче осталось больше одного игрока, происходит шоудаун. Игроки вскрывают карты, и банк уходит лучшей пятикарточной комбинации. Важно не то, насколько красиво выглядят ваши две карманные карты, а то, какие именно пять карт в итоге образуют сильнейшую руку.</p>
+            <p>Иногда победителя нет одного: если лучшие пять карт у двух игроков совпадают по силе, банк делится. Это называется split pot.</p>
+          </div>
+          <div class="card">
+            <h3>Три правила шоудауна</h3>
+            <ul>
+              <li>считается только лучшая комбинация из пяти карт, а не все семь сразу;</li>
+              <li>board тоже может образовать готовую комбинацию для всех игроков;</li>
+              <li>если комбинации равны по силе и кикеру, банк делится поровну.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="mistakes">
+        <div class="container">
+          <div class="section-head">
+            <h2>Что чаще всего ломает руку у новичка</h2>
+            <p>Эти ошибки не про невезение. Они про структуру решения, с которой потом и работает диагностика уровня.</p>
+          </div>
+          <div class="check-grid">
+            <article class="check-item">
+              <strong>Колл по любопытству</strong>
+              <span>Игрок уравнивает ставку без понимания, что будет делать на следующей улице, если давление продолжится.</span>
+            </article>
+            <article class="check-item">
+              <strong>Игнор позиции</strong>
+              <span>Одинаковые руки разыгрываются одинаково и в ранней, и в поздней позиции, хотя информации на самом деле разное количество.</span>
+            </article>
+            <article class="check-item">
+              <strong>Переоценка красивых карт</strong>
+              <span>Высокие карты или одномастность кажутся сильнее, чем есть на самом деле, особенно против агрессии до флопа.</span>
+            </article>
+            <article class="check-item">
+              <strong>Погоня за банком любой ценой</strong>
+              <span>Игрок не выбрасывает руку вовремя, хотя board texture и действия соперника уже явно ухудшили его ситуацию.</span>
+            </article>
+            <article class="check-item">
+              <strong>Путаница в порядке хода</strong>
+              <span>Игрок забывает, кто действует первым на preflop и postflop, и из-за этого плохо понимает, почему позиция дает преимущество.</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt compact" id="faq">
+        <div class="container">
+          <div class="section-head">
+            <h2>Быстрые ответы</h2>
+            <p>Короткий FAQ нужен, чтобы правила читались одинаково удобно на desktop web, mobile web и в коротких summary-модулях.</p>
+          </div>
+          <div class="faq">
+            <details>
+              <summary>Сколько карт у игрока в Texas Hold'em?</summary>
+              <p>Две закрытые карты на руку и до пяти общих карт на столе, из которых вы собираете лучшую пятикарточную комбинацию.</p>
+            </details>
+            <details>
+              <summary>Всегда ли нужно доходить до шоудауна?</summary>
+              <p>Нет. Если все соперники выбросили карты раньше, оставшийся игрок забирает банк без вскрытия.</p>
+            </details>
+            <details>
+              <summary>Почему позиция так важна?</summary>
+              <p>Игрок в поздней позиции принимает решение позже и поэтому видит больше действий соперников перед своим ходом.</p>
+            </details>
+            <details>
+              <summary>Можно ли выиграть банк, не показывая карты?</summary>
+              <p>Да. Если все соперники выбросили карты в ответ на вашу ставку или рейз, рука заканчивается без шоудауна.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>Как превратить правила в практику</h2>
+            <p>После понимания структуры раздачи следующий полезный шаг не в том, чтобы читать еще десять абзацев подряд, а в том, чтобы проверить решения в короткой учебной сессии.</p>
+          </div>
+          <div class="article-links guide-links">
+            <a href="poker-combinations.html">Перейти к комбинациям и закрепить, какие пять карт реально определяют победителя</a>
+            <a href="index.html#diagnostic">Пройти диагностику и проверить, где ломается решение по улицам</a>
+            <a href="index.html#levels">Сверить свой verdict с уровнями 0-6 и понять следующую цель</a>
+            <a href="index.html#agents">Выбрать AI-соперника и потренировать базовые линии без real-money давления</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="band poker-band">
+        <div class="band-inner">
+          <div>
+            <h2>После правил лучше сразу перейти к учебной практике</h2>
+            <p>На главной вас ждут короткая диагностика, уровни игроков, AI-соперники и следующий лучший урок. Платформа остается educational/play-money only без real-money механик.</p>
+          </div>
+          <a class="button secondary" href="index.html#diagnostic">Открыть диагностику</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div>
+          <strong>Фулхаус Poker AI</strong>
+          <p>Учебные раздачи, диагностика уровня, AI-разборы и собственные обучающие материалы.</p>
+          <nav class="footer-nav">
+            <a href="index.html#diagnostic">Диагностика</a>
+            <a href="index.html#learning">Обучение</a>
+            <a href="texas-holdem-rules.html">Правила</a>
+            <a href="poker-combinations.html">Комбинации</a>
+            <a href="index.html#tournaments">Турниры</a>
+            <a href="index.html#news">Новости</a>
+          </nav>
+        </div>
+        <div class="footer-meta">
+          <p>Educational / play-money only</p>
+          <p>© <span data-year></span> Fullhouse LLC</p>
+        </div>
+      </div>
+    </footer>
+    <script src="assets/site.js?v=poker-sim-1"></script>
+  </body>
+</html>

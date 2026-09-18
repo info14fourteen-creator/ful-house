@@ -1,4 +1,9 @@
-.DS_Store
-qa/
-.wrangler/
+.env
+.env.*
+!.env.example
+.dev.vars
 node_modules/
+__pycache__/
+.pytest_cache/
+.wrangler/
+.DS_Store

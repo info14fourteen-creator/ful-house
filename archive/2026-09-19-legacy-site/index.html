@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Фулхаус Poker AI — тренажер покера, диагностика уровня и маршрут обучения</title>
+    <meta name="description" content="Фулхаус Poker AI — educational play-money платформа: диагностика уровня по раздачам, AI-соперники, персональный маршрут обучения, статьи, новости и турнирный контекст.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://ful.house/">
+    <link rel="alternate" hreflang="ru" href="https://ful.house/">
+    <link rel="alternate" hreflang="en" href="https://ful.house/en/">
+    <link rel="alternate" hreflang="x-default" href="https://ful.house/">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#08110e">
+    <meta property="og:site_name" content="Fullhouse Poker AI">
+    <meta property="og:title" content="Фулхаус Poker AI — AI poker trainer, не казино">
+    <meta property="og:description" content="Сыграйте несколько раздач, получите уровень, 3 главные ошибки и персональный план обучения. Только educational и play-money формат.">
+    <meta property="og:url" content="https://ful.house/">
+    <meta property="og:image" content="https://ful.house/assets/homepage-market-mapping.jpg">
+    <meta property="og:image:alt" content="Темная AI poker training platform с диагностикой уровня">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Фулхаус Poker AI — AI poker trainer, не казино">
+    <meta name="twitter:description" content="Диагностика уровня, AI-соперники, маршрут обучения, статьи и турниры. Educational play-money only.">
+    <meta name="twitter:image" content="https://ful.house/assets/homepage-market-mapping.jpg">
+    <link rel="stylesheet" href="assets/styles.css?v=poker-sim-1">
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"Organization","name":"Фулхаус","alternateName":"Fullhouse Poker AI","url":"https://ful.house/","description":"Educational play-money poker training platform with AI-guided level diagnostics, learning routes and editorial content.","address":{"@type":"PostalAddress","addressLocality":"Бишкек","addressCountry":"KG"}}
+    </script>
+  </head>
+  <body class="home-poker">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="index.html" aria-label="Фулхаус Poker AI">
+          <span class="brand-mark">FH</span>
+          <span class="brand-text">Фулхаус<small>Poker AI Trainer</small></span>
+        </a>
+        <nav class="nav" data-nav>
+          <a class="is-active" href="index.html">Главная</a>
+          <a href="#diagnostic">Диагностика</a>
+          <a href="#learning">Обучение</a>
+          <a href="#agents">Тренажер</a>
+          <a href="#articles">Статьи</a>
+          <a href="#tournaments">Турниры</a>
+          <a href="#news">Новости</a>
+        </nav>
+        <div class="header-actions">
+          <a class="header-link" href="#plan">План</a>
+          <a class="lang-switch" href="en/index.html">EN</a>
+          <a class="button primary" href="#diagnostic">Определить уровень</a>
+          <button class="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false" data-menu-toggle>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="poker-hero">
+        <div class="container poker-hero-grid">
+          <div class="hero-copy">
+            <div class="hero-kicker">18+ • Play-money training platform</div>
+            <h1>Сыграйте несколько раздач. Мы определим ваш уровень и соберем маршрут обучения.</h1>
+            <p>Фулхаус Poker AI превращает главную в точку входа в обучение: короткая диагностика решений, AI-соперники, персональный план, статьи, новости и турнирный контекст без real-money механик.</p>
+            <div class="hero-actions">
+              <a class="button primary" href="#diagnostic">Определить мой уровень</a>
+              <a class="button secondary" href="#diagnostic">Как работает диагностика</a>
+            </div>
+            <div class="hero-safety">
+              <span>18+</span>
+              <span>Play-money only</span>
+              <span>Без real-money игры</span>
+            </div>
+          </div>
+
+          <div class="table-stage game-shell" aria-label="Учебный AI poker table" data-poker-game>
+            <div class="game-topbar">
+              <div>
+                <span data-game-hand>Рука 1 из 12</span>
+                <strong data-game-street>Preflop</strong>
+              </div>
+              <div>
+                <span>Банк</span>
+                <strong data-game-pot>1.5 bb</strong>
+              </div>
+              <button class="button secondary compact" type="button" data-game-new>Новая рука</button>
+            </div>
+
+            <div class="table-surface simulator-table">
+              <div class="table-seat seat-top-left" data-seat="calling">
+                <strong>Calling Station</strong>
+                <span data-seat-status>Ждет ход</span>
+                <div class="seat-cards" data-seat-cards="calling"></div>
+              </div>
+              <div class="table-seat seat-top-right" data-seat="tight">
+                <strong>Tight Regular</strong>
+                <span data-seat-status>Ждет ход</span>
+                <div class="seat-cards" data-seat-cards="tight"></div>
+              </div>
+              <div class="table-seat seat-left" data-seat="aggressor">
+                <strong>Aggressor Bot</strong>
+                <span data-seat-status>Ждет ход</span>
+                <div class="seat-cards" data-seat-cards="aggressor"></div>
+              </div>
+              <div class="table-seat seat-bottom hero-seat" data-seat="hero">
+                <strong>Вы</strong>
+                <span data-hero-status>BTN • стек 100bb</span>
+              </div>
+              <div class="table-pot">
+                <small>Текущая задача</small>
+                <strong data-game-task>Выберите действие preflop</strong>
+              </div>
+              <div class="table-board" data-game-board>
+                <span class="card-back">?</span>
+                <span class="card-back">?</span>
+                <span class="card-back">?</span>
+                <span class="card-back">?</span>
+                <span class="card-back">?</span>
+              </div>
+              <div class="table-hand" data-game-hand-cards>
+                <span class="card-back">?</span>
+                <span class="card-back">?</span>
+              </div>
+            </div>
+
+            <aside class="diagnostic-preview game-panel">
+              <div class="preview-top">
+                <span>Живая диагностика</span>
+                <strong data-game-level>First Hand</strong>
+              </div>
+              <div class="game-actions" aria-label="Действия игрока">
+                <button class="button danger" type="button" data-game-action="fold">Fold</button>
+                <button class="button secondary" type="button" data-game-action="check">Check / Call</button>
+                <button class="button primary" type="button" data-game-action="bet">Bet / Raise</button>
+              </div>
+              <div class="preview-score">
+                <div>
+                  <small>Ваша рука</small>
+                  <strong data-game-rank>Раздача готовится</strong>
+                </div>
+                <div>
+                  <small>Фокус сейчас</small>
+                  <strong data-game-focus>Preflop discipline</strong>
+                </div>
+              </div>
+              <div class="decision-meter" aria-label="Прогресс диагностики">
+                <span data-meter-fill></span>
+              </div>
+              <p class="coach-note" data-game-coach>Нажмите "Новая рука", затем сыграйте несколько улиц. Система будет оценивать решения, а не только выигрыш банка.</p>
+              <div class="hand-log" data-game-log aria-live="polite"></div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="hero-strip">
+        <div class="container strip-grid">
+          <article>
+            <strong>10-20 рук</strong>
+            <span>Хватает, чтобы оценить preflop, позицию, агрессию и discipline.</span>
+          </article>
+          <article>
+            <strong>0-6 уровней</strong>
+            <span>От First Hand до Pro Lab с понятным verdict после сессии.</span>
+          </article>
+          <article>
+            <strong>AI-соперники</strong>
+            <span>От Beginner Bot до GTO-ish Bot и Tournament Bot.</span>
+          </article>
+          <article>
+            <strong>Один продукт, 4 поверхности</strong>
+            <span>Desktop web, mobile web, Telegram Mini App и будущий macOS app.</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="diagnostic">
+        <div class="container">
+          <div class="section-head">
+            <h2>Как работает диагностика уровня</h2>
+            <p>Пользователь не читает длинный онбординг. Он сразу попадает в короткую серию учебных решений, а система по ходу объясняет, что именно оценивает и какой маршрут соберет после сессии.</p>
+          </div>
+          <div class="diagnostic-shell">
+            <aside class="diagnostic-intro">
+              <article class="diagnostic-brief">
+                <small>Short session contract</small>
+                <h3>10-20 учебных рук вместо длинной анкеты</h3>
+                <p>Диагностика смотрит не на luck и не на финальный банк, а на качество ваших решений: что вы открываете, где лишний колл, как держите позицию и когда сдаётесь вовремя.</p>
+              </article>
+              <div class="diagnostic-facts" aria-label="Что система оценивает">
+                <article>
+                  <strong>Что оцениваем</strong>
+                  <p>Префлоп discipline, позицию, агрессию, fold vs call, pot odds и реакцию на опасные доски.</p>
+                </article>
+                <article>
+                  <strong>Какой ритм</strong>
+                  <p>Короткие сессии подходят и для desktop web, и для mobile web, а позже так же лягут в Telegram Mini App и macOS client.</p>
+                </article>
+              </div>
+            </aside>
+            <div class="diagnostic-main">
+              <div class="poker-flow">
+                <article class="flow-step">
+                  <span>01</span>
+                  <h3>Выберите режим входа</h3>
+                  <p>Новичок, уже играл или проверка без подсказок. Сценарий подстраивает объяснения и плотность интерфейса без длинной регистрации.</p>
+                </article>
+                <article class="flow-step">
+                  <span>02</span>
+                  <h3>Сыграйте серию decision spots</h3>
+                  <p>Каждая раздача показывает legal actions и фиксирует, как вы играете позицию, размер ставки, давление и дисциплину фолда.</p>
+                </article>
+                <article class="flow-step">
+                  <span>03</span>
+                  <h3>Система собирает промежуточный read</h3>
+                  <p>Во время сессии HUD подсказывает текущий фокус: например, preflop discipline, fold vs call или игра на опасной доске.</p>
+                </article>
+                <article class="flow-step">
+                  <span>04</span>
+                  <h3>Получите verdict и следующий модуль</h3>
+                  <p>После серии вы видите уровень, 3 главные утечки и первый урок, который переводит результат в повторяемый тренировочный цикл.</p>
+                </article>
+              </div>
+              <div class="diagnostic-outcome">
+                <div class="diagnostic-lens">
+                  <strong>Что видно уже во время сессии</strong>
+                  <ul>
+                    <li>какая метрика сейчас в фокусе;</li>
+                    <li>сколько рук осталось до результата;</li>
+                    <li>где вы играете уверенно, а где теряете дисциплину.</li>
+                  </ul>
+                </div>
+                <div class="diagnostic-result">
+                  <small>После диагностики</small>
+                  <strong>Уровень, 3 ошибки и next best lesson</strong>
+                  <p>Главная заранее объясняет финальный выход: verdict не остается красивой карточкой, а превращается в личный план, мини-тест и 5 тренировочных раздач.</p>
+                  <a class="button secondary" href="#plan">Посмотреть, как verdict переходит в план</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt" id="levels">
+        <div class="container">
+          <div class="section-head">
+            <h2>Какие уровни мы определяем</h2>
+            <p>Шкала строится вокруг качества решений, а не краткосрочного выигрыша. Это единый контракт для web, mini app и будущего desktop-клиента.</p>
+          </div>
+          <div class="level-shell">
+            <aside class="level-overview">
+              <article class="level-overview-card">
+                <small>Как читается verdict</small>
+                <h3>Уровень показывает не статус, а ближайший учебный контур</h3>
+                <p>Мы не делим игроков на сильных и слабых по одной короткой сессии. Verdict нужен, чтобы быстро понять: где вы уже принимаете устойчивые решения, а где теряете EV из-за хаоса, лишних коллов или слабого multi-street плана.</p>
+              </article>
+              <div class="level-verdict-points">
+                <article>
+                  <strong>На чем строится оценка</strong>
+                  <p>Стартовые руки, позиция, реакция на агрессию, понимание board texture, pot odds и способность вовремя сдаться.</p>
+                </article>
+                <article>
+                  <strong>Что происходит после уровня</strong>
+                  <p>Каждый уровень сразу связывается с первым уроком, коротким quiz и набором тренировочных раздач под вашу главную ошибку.</p>
+                </article>
+              </div>
+            </aside>
+          <div class="level-grid">
+            <article class="level-card">
+              <strong>0</strong>
+              <h3>First Hand</h3>
+              <p>Не знает комбинации, blind/button и порядок торговли, поэтому выбирает действия случайно.</p>
+              <span class="level-tag">Сначала даем: правила, комбинации, legal actions</span>
+            </article>
+            <article class="level-card">
+              <strong>1</strong>
+              <h3>Beginner</h3>
+              <p>Понимает fold, call и raise, но переоценивает красивые руки и играет без учета позиции.</p>
+              <span class="level-tag">Фокус: стартовые руки, позиции, fold discipline</span>
+            </article>
+            <article class="level-card">
+              <strong>2</strong>
+              <h3>Recreational</h3>
+              <p>Играет по ощущению, часто лишний раз коллирует и не добирает value против слабых диапазонов.</p>
+              <span class="level-tag">Фокус: pot odds, лишние коллы, value betting</span>
+            </article>
+            <article class="level-card">
+              <strong>3</strong>
+              <h3>Intermediate</h3>
+              <p>Знает базовые диапазоны и агрессию, но теряется, когда нужно строить линию на несколько улиц.</p>
+              <span class="level-tag">Фокус: c-bet, turn/river plan, board texture</span>
+            </article>
+            <article class="level-card">
+              <strong>4</strong>
+              <h3>Advanced</h3>
+              <p>Думает диапазонами и видит pressure points, но еще не всегда точно балансирует exploit и value.</p>
+              <span class="level-tag">Фокус: bet sizing, line construction, exploit shifts</span>
+            </article>
+            <article class="level-card">
+              <strong>5-6</strong>
+              <h3>Grinder / Pro Lab</h3>
+              <p>Работает со сложными линиями, ICM и mixed strategies, поэтому ждёт от тренажера точечных разборов слабых мест.</p>
+              <span class="level-tag">Фокус: leak finder, ICM spots, solver-inspired drills</span>
+            </article>
+          </div>
+          </div>
+          <div class="level-footer">
+            <div class="level-footer-card">
+              <small>После результата</small>
+              <strong>Verdict не живет отдельно от практики</strong>
+              <p>На desktop и mobile web это переходит в личный план, на Telegram Mini App - в короткий next lesson и daily hand, а для будущего macOS app остается тем же route-contract для быстрых сессий и истории прогресса.</p>
+              <a class="button secondary" href="#plan">Посмотреть маршрут после verdict</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="articles">
+        <div class="container content-stack">
+          <div class="section-head">
+            <h2>Главная сразу показывает, что будет после диагностики</h2>
+            <p>Home feed соединяет статьи, базовые гайды и следующий учебный шаг. Пользователь видит не абстрактный маркетинг, а реальную структуру роста после verdict.</p>
+          </div>
+          <div class="content-shell">
+            <div class="content-intro">
+              <article class="feature-panel">
+                <small>Featured article</small>
+                <h3>Почему call часто становится самой дорогой ошибкой новичка</h3>
+                <p>Показываем образовательный угол: когда колл без плана ломает раздачу, почему fold discipline важнее любопытства и как это связано с диагностикой уровня.</p>
+                <a class="button secondary" href="#learning">Связать статью с маршрутом</a>
+              </article>
+            </div>
+            <div class="content-panels">
+              <article class="content-panel">
+                <small>Библиотека</small>
+                <h3>Правила Texas Hold'em</h3>
+                <p>Короткий вход для mobile и Mini App summary, плюс полный guide для desktop-сессии.</p>
+                <a class="button secondary" href="texas-holdem-rules.html">Открыть правила</a>
+              </article>
+              <article class="content-panel">
+                <small>База решений</small>
+                <h3>Комбинации, позиции и preflop</h3>
+                <p>Три главные опоры первой недели: как устроен стол, почему позиция решает и с чего начинается дисциплина диапазонов.</p>
+                <a class="button secondary" href="poker-combinations.html">Открыть комбинации</a>
+              </article>
+              <article class="content-panel">
+                <small>Возврат в продукт</small>
+                <h3>Следующий лучший урок</h3>
+                <p>После каждой сессии игрок получает один actionable next step вместо бесконечного списка материалов.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt" id="learning">
+        <div class="container">
+          <div class="section-head">
+            <h2>Обучение строится вокруг решений, а не вокруг случайного результата</h2>
+            <p>Главная объясняет сам цикл: verdict превращается в модуль, мини-тест, короткий drill и следующую проверку. Такой же поток должен одинаково читаться на desktop web, mobile web, в Telegram Mini App и позже в macOS app.</p>
+          </div>
+          <div class="plan-grid">
+            <article class="plan-card">
+              <strong>Решение</strong>
+              <h3>Диагностика ловит leak</h3>
+              <p>Система оценивает действие по позиции, агрессии, pot odds и fold discipline, а не по тому, доехала ли карта.</p>
+            </article>
+            <article class="plan-card">
+              <strong>Урок</strong>
+              <h3>Один модуль на один навык</h3>
+              <p>Игрок получает один приоритетный блок: например, стартовые диапазоны, continuation bet или защита против давления.</p>
+            </article>
+            <article class="plan-card">
+              <strong>Дрилл</strong>
+              <h3>5 учебных раздач подряд</h3>
+              <p>Короткая тренировка закрепляет тему в формате, который удобно повторять и на телефоне, и в будущем Mini App.</p>
+            </article>
+            <article class="plan-card">
+              <strong>Возврат</strong>
+              <h3>Повторная проверка без лишнего шума</h3>
+              <p>Пользователь видит, ушла ли ошибка, и сразу получает следующий лучший урок вместо перегруженного кабинета.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt" id="agents">
+        <div class="container">
+          <div class="section-head">
+            <h2>AI-стол и соперники с понятной учебной ролью</h2>
+            <p>Здесь нет casino подачи. Каждый бот нужен, чтобы ловить отдельный тип ошибки и вести игрока к следующему модулю.</p>
+          </div>
+          <div class="agent-shell">
+            <aside class="agent-overview">
+              <article class="agent-overview-card">
+                <small>Кого вы видите за столом</small>
+                <h3>Соперники тренируют конкретный leak, а системный AI переводит его в verdict и следующий урок</h3>
+                <p>Игровые боты отвечают за pressure spots и стили оппонентов. Отдельный системный слой объясняет ошибки, собирает уровень и не дает платформе превратиться в бессмысленный набор аватаров.</p>
+              </article>
+              <div class="agent-overview-points">
+                <article>
+                  <strong>Что меняется по мере роста</strong>
+                  <p>Новичок чаще начинает с Beginner Bot и Calling Station, а уровни Intermediate-Advanced переходят к Aggressor, Tight Regular и GTO-ish сценариям.</p>
+                </article>
+                <article>
+                  <strong>Как это работает на 4 поверхностях</strong>
+                  <p>Desktop web показывает полный набор карточек и explanation layer, mobile web складывает их в один поток, Telegram Mini App оставляет 2-3 ключевых профиля, а macOS app позже использует те же роли в compact library.</p>
+                </article>
+              </div>
+            </aside>
+            <div class="agent-main">
+              <div class="agent-group-head">
+                <div>
+                  <small>Training opponents</small>
+                  <h3>AI-соперники для учебных сценариев</h3>
+                </div>
+                <p>Каждая карточка отвечает на три вопроса: против какого стиля вы играете, какой leak вскрывается и кому этот сценарий подходит прямо сейчас.</p>
+              </div>
+              <div class="agent-grid">
+                <article class="agent-card">
+                  <div class="agent-card-top">
+                    <span class="agent-kind">AI-соперник</span>
+                    <span class="agent-range">First Hand -> Beginner</span>
+                  </div>
+                  <h3>Beginner Bot</h3>
+                  <p>Дает безопасный вход в первые учебные раздачи: показывает порядок действий, простые value spots и не перегружает игрока слишком сложным давлением.</p>
+                  <div class="agent-tags">
+                    <span>Rules</span>
+                    <span>Value</span>
+                    <span>Legal actions</span>
+                  </div>
+                  <div class="agent-meta">
+                    <strong>Ловит:</strong>
+                    <span>хаос в очередности действий и случайные коллы без понимания структуры раздачи.</span>
+                  </div>
+                </article>
+                <article class="agent-card">
+                  <div class="agent-card-top">
+                    <span class="agent-kind">AI-соперник</span>
+                    <span class="agent-range">Beginner -> Recreational</span>
+                  </div>
+                  <h3>Calling Station Bot</h3>
+                  <p>Часто коллирует и заставляет тоньше выбирать value betting, sizing и моменты, когда блеф уже не работает.</p>
+                  <div class="agent-tags">
+                    <span>Thin value</span>
+                    <span>Sizing</span>
+                    <span>Fold to bad bluffs</span>
+                  </div>
+                  <div class="agent-meta">
+                    <strong>Ловит:</strong>
+                    <span>автоматические ставки в пустоту и недобор value против широкого диапазона колла.</span>
+                  </div>
+                </article>
+                <article class="agent-card">
+                  <div class="agent-card-top">
+                    <span class="agent-kind">AI-соперник</span>
+                    <span class="agent-range">Recreational -> Intermediate</span>
+                  </div>
+                  <h3>Tight Regular Bot</h3>
+                  <p>Играет узко и дисциплинированно, поэтому быстро показывает, где пользователь переоценивает красивые руки и игнорирует позицию.</p>
+                  <div class="agent-tags">
+                    <span>Preflop</span>
+                    <span>Position</span>
+                    <span>Selective aggression</span>
+                  </div>
+                  <div class="agent-meta">
+                    <strong>Ловит:</strong>
+                    <span>лишние коллы против сильного диапазона и открытие рук, которые плохо реализуют equity.</span>
+                  </div>
+                </article>
+                <article class="agent-card">
+                  <div class="agent-card-top">
+                    <span class="agent-kind">AI-соперник</span>
+                    <span class="agent-range">Intermediate -> Advanced</span>
+                  </div>
+                  <h3>Aggressor Bot</h3>
+                  <p>Давит ставками, 3-bet и c-bet линиями, чтобы проверить, как игрок защищается от давления и не скатывается в лишние hero calls.</p>
+                  <div class="agent-tags">
+                    <span>Defense</span>
+                    <span>Re-raise logic</span>
+                    <span>Tilt resistance</span>
+                  </div>
+                  <div class="agent-meta">
+                    <strong>Ловит:</strong>
+                    <span>эмоциональные коллы, слабую защиту диапазона и отсутствие плана на следующую улицу.</span>
+                  </div>
+                </article>
+                <article class="agent-card">
+                  <div class="agent-card-top">
+                    <span class="agent-kind">AI-соперник</span>
+                    <span class="agent-range">Advanced -> Grinder</span>
+                  </div>
+                  <h3>GTO-ish Bot</h3>
+                  <p>Проверяет, умеете ли вы думать диапазонами, строить multi-street plan и не теряться на сложных board texture.</p>
+                  <div class="agent-tags">
+                    <span>Range thinking</span>
+                    <span>Board coverage</span>
+                    <span>Bluff mix</span>
+                  </div>
+                  <div class="agent-meta">
+                    <strong>Ловит:</strong>
+                    <span>перекосы в value/bluff balance и решения без покрытия следующих улиц.</span>
+                  </div>
+                </article>
+                <article class="agent-card">
+                  <div class="agent-card-top">
+                    <span class="agent-kind">AI-соперник</span>
+                    <span class="agent-range">Intermediate -> Grinder</span>
+                  </div>
+                  <h3>Tournament Bot</h3>
+                  <p>Показывает short stack, push-fold и ICM-pressure сценарии, чтобы турнирный контекст не оставался только контентным блоком.</p>
+                  <div class="agent-tags">
+                    <span>ICM</span>
+                    <span>Short stack</span>
+                    <span>Push/Fold</span>
+                  </div>
+                  <div class="agent-meta">
+                    <strong>Ловит:</strong>
+                    <span>неверные all-in решения под турнирным давлением и путаницу между cash-логикой и MTT spot.</span>
+                  </div>
+                </article>
+              </div>
+              <div class="system-agent-panel">
+                <div class="agent-group-head compact">
+                  <div>
+                    <small>System AI</small>
+                    <h3>Кто переводит сессию в объяснение и план</h3>
+                  </div>
+                  <p>Эти агенты не сидят за столом как соперники. Они собирают verdict, объясняют ошибку и подбирают следующий модуль без real-money framing.</p>
+                </div>
+                <div class="system-agent-grid">
+                  <article class="system-agent-card">
+                    <strong>Skill Evaluator</strong>
+                    <p>Определяет уровень по качеству решений, а не по краткосрочному результату банка.</p>
+                  </article>
+                  <article class="system-agent-card">
+                    <strong>Coach Agent</strong>
+                    <p>Разбирает руку человеческим языком: где leak, почему линия уязвима и какой принцип нужно закрепить.</p>
+                  </article>
+                  <article class="system-agent-card">
+                    <strong>Curriculum Agent</strong>
+                    <p>Собирает маршрут из одного приоритетного урока, quiz и 5 тренировочных раздач вместо перегруженного кабинета.</p>
+                  </article>
+                  <article class="system-agent-card">
+                    <strong>Safety Agent</strong>
+                    <p>Следит, чтобы тексты и подсказки оставались educational/play-money only без обещаний дохода и betting-like copy.</p>
+                  </article>
+                </div>
+              </div>
+              <div class="agent-footer-card">
+                <strong>После выбора соперника пользователь не уходит в sandbox без цели</strong>
+                <p>На desktop web и mobile web карточка ведет в тренировочный сценарий или diagnostic hand set, в Telegram Mini App сокращается до quick challenge, а будущий macOS app сможет запускать те же профили из quick library без расхождения ролей и названий.</p>
+                <a class="button secondary" href="#diagnostic">Сначала пройти диагностику</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="plan">
+        <div class="container">
+          <div class="section-head">
+            <h2>Личный план превращает результат в повторяемый цикл обучения</h2>
+            <p>У игрока не должно быть тупика после verdict. Платформа переводит уровень и ошибки в последовательность уроков, мини-тестов, тренировочных рук и повторной проверки.</p>
+          </div>
+          <div class="plan-grid">
+            <article class="plan-card">
+              <strong>01</strong>
+              <h3>Verdict и 3 утечки</h3>
+              <p>Игрок получает уровень, короткое объяснение стиля и три решения, которые сильнее всего тормозят рост.</p>
+            </article>
+            <article class="plan-card">
+              <strong>02</strong>
+              <h3>Урок и мини-тест</h3>
+              <p>Следующий модуль объясняет конкретную leak: например, зачем фолдить чаще против давления или как читать позицию.</p>
+            </article>
+            <article class="plan-card">
+              <strong>03</strong>
+              <h3>5 тренировочных раздач</h3>
+              <p>Короткий drill закрепляет один навык и остается удобным на desktop web, mobile web и future Mini App challenge flow.</p>
+            </article>
+            <article class="plan-card">
+              <strong>04</strong>
+              <h3>Повторная проверка</h3>
+              <p>Пользователь возвращается к диагностике и видит, меняются ли решения по preflop, агрессии, pot odds и fold discipline.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt" id="tournaments">
+        <div class="container content-shell">
+          <div class="content-intro">
+            <h2>Турнирный контекст подается как обучение, а не как лобби</h2>
+            <p>Игрок видит, какие серии и форматы сейчас важны, и сразу понимает, зачем ему знать различие между MTT, satellite, bounty и turbo.</p>
+          </div>
+          <div class="content-panels">
+            <article class="content-panel">
+              <small>Сейчас в фокусе</small>
+              <h3>Curated calendar с source links</h3>
+              <p>Только собственные summaries, даты, формат и ссылка на источник без prize-pool hype и без копирования длинных анонсов.</p>
+            </article>
+            <article class="content-panel">
+              <small>Форматы</small>
+              <h3>MTT, satellite, bounty, turbo</h3>
+              <p>Короткие объяснения помогают новичку читать турнирный календарь и понимать, какие сценарии тренировать дальше.</p>
+            </article>
+            <article class="content-panel">
+              <small>Bridge</small>
+              <h3>Тренировать tournament pressure</h3>
+              <p>Будущий Tournament Bot и short-stack drills связывают календарь с практикой, а не оставляют пользователя в режиме чтения.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="news">
+        <div class="container content-shell">
+          <div class="content-intro">
+            <h2>Новости и RSS работают как curated learning desk</h2>
+            <p>Главная заранее показывает, что новости будут использоваться как внешние сигналы и источник контекста, а не как скрейпинг или трафиковая лента.</p>
+          </div>
+          <div class="content-panels">
+            <article class="content-panel">
+              <small>Featured brief</small>
+              <h3>Один важный инфоповод с объяснением</h3>
+              <p>Пользователь получает короткий summary, зачем это важно ученику, и переход в собственный guide или турнирный раздел.</p>
+            </article>
+            <article class="content-panel">
+              <small>External sources</small>
+              <h3>PokerNews, WSOP, WPT и другие ленты</h3>
+              <p>Карточки содержат только headline, источник, дату и наш короткий пересказ с outbound link на оригинал.</p>
+            </article>
+            <article class="content-panel">
+              <small>Return loop</small>
+              <h3>Из новости обратно в урок</h3>
+              <p>Каждый news-item должен подсказывать, что прочитать, что потренировать или куда перейти дальше внутри платформы.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="band poker-band" id="responsible-play">
+        <div class="band-inner">
+          <div>
+            <h2>Фулхаус Poker AI — это AI poker trainer, а не betting product</h2>
+            <p>Платформа остается educational/play-money only: 18+, без депозитов, без real-money столов, без обещаний заработка и без копирования внешних материалов целиком.</p>
+          </div>
+          <a class="button secondary" href="contact.html">Связаться по проекту</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div>
+          <strong>Фулхаус Poker AI</strong>
+          <p>Диагностика уровня, AI-соперники, учебный маршрут, статьи, новости и турнирный контекст.</p>
+          <nav class="footer-nav">
+            <a href="#diagnostic">Диагностика</a>
+            <a href="#learning">Обучение</a>
+            <a href="#articles">Статьи</a>
+            <a href="#plan">План</a>
+            <a href="#tournaments">Турниры</a>
+            <a href="#news">Новости</a>
+          </nav>
+        </div>
+        <div class="footer-meta">
+          <p>Educational / play-money only</p>
+          <p>© <span data-year></span> Fullhouse LLC</p>
+        </div>
+      </div>
+    </footer>
+    <script src="assets/site.js?v=poker-sim-1"></script>
+  </body>
+</html>
