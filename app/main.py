@@ -53,7 +53,7 @@ async def start():
 
 @router.post('/stop')
 async def stop():
-    if not await control.stop(): raise HTTPException(409,'Сервер занят или управление недоступно')
+    if not await control.stop(): raise HTTPException(409,'Server busy or controls unavailable')
     return {'phase':control.phase}
 
 # Prepend routes before upstream's catch-all SPA route.

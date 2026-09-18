@@ -31,7 +31,7 @@ class Guard:
                 return await JSONResponse({'detail':'Session expired'},401)(scope,receive,send)
         if scope['type']=='http':
             if path.startswith('/api/v1/auths/signup'):
-                return await JSONResponse({'detail':'Регистрация закрыта'},403)(scope,receive,send)
+                return await JSONResponse({'detail':'Registration is closed'},403)(scope,receive,send)
             if scope['method'] not in ('GET','HEAD','OPTIONS'):
                 origin=headers.get(b'origin',b'').decode()
                 if origin and origin!=os.getenv('WEBUI_URL','https://ful.house'):

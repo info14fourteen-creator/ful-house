@@ -5,10 +5,10 @@
   document.documentElement.classList.add('dark');
   localStorage.setItem('theme','dark');
   const controls=document.createElement('aside');
-  controls.id='fh-controls'; controls.hidden=true; controls.setAttribute('aria-label','Управление сервером');
-  controls.innerHTML='<span id="fh-dot"></span><span id="fh-status" role="status" aria-live="polite">Проверяем сервер…</span><button id="fh-toggle" type="button">Запустить</button>';
-  const wait=document.createElement('section');wait.id='fh-wait';wait.hidden=true;wait.setAttribute('aria-label','Запуск сервера');
-  wait.innerHTML='<canvas id="fh-rain" aria-hidden="true"></canvas><div class="fh-wait-copy"><img src="/matrix-symbol-logo.svg?v=brand-1" alt="ful.house" width="48" height="48"><div class="fh-eyebrow">FUL.HOUSE / ПРАВЕЦ 8А</div><h2>Пробуждаем машину<span class="fh-cursor"></span></h2><p id="fh-phase" role="status" aria-live="polite">Запускаем сервер</p><button id="fh-hide" type="button">Вернуться к чатам</button></div>';
+  controls.id='fh-controls'; controls.hidden=true; controls.setAttribute('aria-label','Server controls');
+  controls.innerHTML='<span id="fh-dot"></span><span id="fh-status" role="status" aria-live="polite">Checking server…</span><button id="fh-toggle" type="button">Start</button>';
+  const wait=document.createElement('section');wait.id='fh-wait';wait.hidden=true;wait.setAttribute('aria-label','Server startup');
+  wait.innerHTML='<canvas id="fh-rain" aria-hidden="true"></canvas><div class="fh-wait-copy"><img src="/matrix-symbol-logo.svg?v=brand-1" alt="ful.house" width="48" height="48"><div class="fh-eyebrow">FUL.HOUSE / PRAVETZ 8A</div><h2>Waking the machine<span class="fh-cursor"></span></h2><p id="fh-phase" role="status" aria-live="polite">Starting server</p><button id="fh-hide" type="button">Back to chats</button></div>';
   document.body.append(controls,wait);
   const status=controls.querySelector('#fh-status'),toggle=controls.querySelector('button'),phase=wait.querySelector('#fh-phase');
   let running=false,busy=false,frame=0,previousFocus=null;
@@ -17,7 +17,7 @@
   function hideWait(){wait.hidden=true;cancelAnimationFrame(frame);previousFocus?.focus();}
   wait.querySelector('button').onclick=hideWait;
   wait.addEventListener('keydown',e=>{if(e.key==='Escape')hideWait();if(e.key==='Tab'){e.preventDefault();wait.querySelector('button').focus();}});
-  const phrases={stopped:'GPU выключен',starting:'Запускаем сервер',loading:'Подготовка',ready:'Готово',stopping:'Останавливаем GPU',unconfigured:'Нужно подключить управление GPU',error:'Ошибка запуска — можно повторить'};
+  const phrases={stopped:'Server stopped',starting:'Starting server',loading:'Preparing',ready:'Ready',stopping:'Stopping server',unconfigured:'Server controls unavailable',error:'Startup failed — try again'};
   async function api(path,method='GET'){
     const token=localStorage.getItem('token'); if(!token)throw new Error('auth');
     const r=await fetch('/fulhouse/api/'+path,{method,headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'}});
@@ -31,10 +31,10 @@
         startAfterLogin=false;sessionStorage.removeItem('fh-start-after-login');
         if(['stopped','error'].includes(s.phase))s=await api('start','POST');
       }
-      controls.hidden=false;running=s.phase==='ready';busy=['starting','loading','stopping'].includes(s.phase);status.textContent=phrases[s.phase]||'Проверяем сервер';phase.textContent=status.textContent;controls.querySelector('#fh-dot').dataset.ready=String(running);toggle.textContent=running?'Выключить':busy?'Подождите…':'Запустить';toggle.disabled=busy||s.phase==='unconfigured';if(running&&!wait.hidden)hideWait();}
-    catch(e){if(e.message==='auth'){controls.hidden=true;hideWait();}else {status.textContent='Нет связи с сервером';phase.textContent='Связь прервалась. Повторяем проверку…';}}
+      controls.hidden=false;running=s.phase==='ready';busy=['starting','loading','stopping'].includes(s.phase);status.textContent=phrases[s.phase]||'Checking server';phase.textContent=status.textContent;controls.querySelector('#fh-dot').dataset.ready=String(running);toggle.textContent=running?'Stop':busy?'Please wait…':'Start';toggle.disabled=busy||s.phase==='unconfigured';if(running&&!wait.hidden)hideWait();}
+    catch(e){if(e.message==='auth'){controls.hidden=true;hideWait();}else {status.textContent='Server unreachable';phase.textContent='Connection lost. Retrying…';}}
   }
-  toggle.onclick=async()=>{toggle.disabled=true;try{await api(running?'stop':'start','POST');if(!running)showWait();await refresh();}catch{status.textContent='Не удалось выполнить команду';toggle.disabled=false;}};
+  toggle.onclick=async()=>{toggle.disabled=true;try{await api(running?'stop':'start','POST');if(!running)showWait();await refresh();}catch{status.textContent='Command failed';toggle.disabled=false;}};
   function animate(){
     if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
     const canvas=wait.querySelector('canvas'),ctx=canvas.getContext('2d');if(!ctx)return;

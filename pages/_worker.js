@@ -15,7 +15,7 @@ export default {
       const asset=await env.ASSETS.fetch(new URL(brand[url.pathname],url));
       const response=new Response(asset.body,asset);response.headers.set('Cache-Control','no-cache');return response;
     }
-    if (['/static/homebrew.css','/static/matrix.js','/static/terminal-login.css','/static/terminal-login.js','/static/idle.js','/static/idle.css','/static/branding.js'].includes(url.pathname)) {
+    if (['/static/homebrew.css','/static/matrix.js','/static/terminal-login.css','/static/terminal-login.js','/static/idle.js','/static/idle.css','/static/branding.js','/static/locale.js'].includes(url.pathname)) {
       const asset=await env.ASSETS.fetch(request);
       const response=new Response(asset.body,asset);
       response.headers.set('Cache-Control','no-cache');
@@ -35,7 +35,7 @@ export default {
       return new Response('Not found', {status:404});
     }
     if (!env.ORIGIN_URL || !env.FULHOUSE_ORIGIN_SECRET) {
-      return new Response('Сервис готовится к запуску.', {status:503,headers:{'content-type':'text/plain; charset=utf-8','cache-control':'no-store'}});
+      return new Response('The service is starting.', {status:503,headers:{'content-type':'text/plain; charset=utf-8','cache-control':'no-store'}});
     }
     const target = new URL(env.ORIGIN_URL);
     if (target.protocol !== 'https:') return new Response('Configuration error', {status:503});
@@ -68,9 +68,9 @@ export default {
     response.headers.set('X-Robots-Tag','noindex, nofollow');
     if ((response.headers.get('content-type') || '').includes('text/html')) {
       return new HTMLRewriter()
-        .on('head', {element(e){e.append('<script defer src="/static/branding.js?v=brand-1"></script><link rel="stylesheet" href="/static/idle.css?v=idle-3"><script defer src="/static/idle.js?v=idle-3"></script>',{html:true});}})
+        .on('head', {element(e){e.prepend('<script src="/static/locale.js?v=english-1"></script>',{html:true});e.append('<script defer src="/static/branding.js?v=brand-1"></script><link rel="stylesheet" href="/static/idle.css?v=idle-3"><script defer src="/static/idle.js?v=idle-3"></script>',{html:true});}})
         .on('link[href="/static/homebrew.css"]', {element(e){e.setAttribute('href','/static/homebrew.css?v=brand-1');}})
-        .on('script[src="/static/matrix.js"]', {element(e){e.setAttribute('src','/static/matrix.js?v=brand-1');}})
+        .on('script[src="/static/matrix.js"]', {element(e){e.setAttribute('src','/static/matrix.js?v=english-1');}})
         .transform(response);
     }
     return response;

@@ -12,9 +12,9 @@ async def start_bridge(control):
         tracked=request.path in ('/api/chat','/api/generate','/api/embed','/api/embeddings','/v1/chat/completions','/v1/completions')
         if tracked:
             if not await control.begin_request():
-                return web.json_response({'error':'GPU выключен. Нажмите «Запустить».'},status=503)
+                return web.json_response({'error':'Server stopped. Click “Start”.'},status=503)
         elif control.phase != 'ready':
-            return web.json_response({'error':'GPU выключен'},status=503)
+            return web.json_response({'error':'Server stopped'},status=503)
         try:
             data=await request.read()
             async with ClientSession(timeout=ClientTimeout(total=None,sock_connect=10,sock_read=300)) as session:

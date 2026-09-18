@@ -38,4 +38,4 @@ async def app(scope,receive,send):
     elif scope['type']=='websocket':
         await send({'type':'websocket.close','code':1013})
     else:
-        await PlainTextResponse('Ошибка запуска интерфейса.' if startup_error else 'Fullhouse запускается. Обновите страницу через несколько секунд.',status_code=503,headers={'Retry-After':'5','Cache-Control':'no-store','X-Fullhouse-State':'error' if startup_error else 'starting'})(scope,receive,send)
+        await PlainTextResponse('Interface startup failed.' if startup_error else 'Fullhouse is starting. Refresh the page in a few seconds.',status_code=503,headers={'Retry-After':'5','Cache-Control':'no-store','X-Fullhouse-State':'error' if startup_error else 'starting'})(scope,receive,send)

@@ -4,23 +4,23 @@
   const loginLine=document.querySelector('#login-line'),passwordLine=document.querySelector('#password-line'),feedback=document.querySelector('#feedback');
   let step='login',pending=false;
   const lines=[
-    'Ready to see how deep the rabbit hole goes?',
-    'Red pill or blue pill?',
-    'There is no spoon.',
-    'Wake up, Neo.',
-    'Guns. Lots of guns.',
-    'Welcome to the real world.',
-    'Follow the white rabbit.',
-    "I'll be back.",
-    'Hasta la vista, baby.',
-    'May the Force be with you.',
-    'Do. Or do not. There is no try.',
-    "Roads? Where we're going, we don't need roads.",
-    'Houston, we have a problem.',
-    'Bond. James Bond.',
-    'I feel the need — the need for speed!',
-    'Why so serious?'
-  ];
+    "Follow the white rabbit.",
+    "Wake up, Neo.",
+    "The Matrix has you.",
+    "There is no spoon.",
+    "Welcome to the real world.",
+    "Guns. Lots of guns.",
+    "I know kung fu.",
+    "Show me.",
+    "Free your mind.",
+    "Stop trying to hit me and hit me!",
+    "Dodge this.",
+    "Ignorance is bliss.",
+    "Welcome to the desert of the real.",
+    "What is real?",
+    "There is no try.",
+    "You take the red pill — you stay in Wonderland."
+];
   const previous=Number(sessionStorage.getItem('fh-last-movie-line') ?? -1);
   const choices=lines.map((_,i)=>i).filter(i=>i!==previous);
   const selected=choices[crypto.getRandomValues(new Uint32Array(1))[0]%choices.length];
