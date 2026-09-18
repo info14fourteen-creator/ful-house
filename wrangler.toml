@@ -1,0 +1,6 @@
+name = "ful-house"
+compatibility_date = "2026-09-19"
+pages_build_output_dir = "pages"
+
+[vars]
+ORIGIN_URL = "https://fulhouse-ai-49dd9be11245.herokuapp.com"

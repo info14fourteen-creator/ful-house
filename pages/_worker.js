@@ -1,0 +1,29 @@
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    // Never publish source archives, configuration, or local environment files.
+    if (/^\/(archive(?:\/|$)|\.env(?:\.|$)|\.git(?:\/|$))/.test(url.pathname)) {
+      return new Response('Not found', {status:404});
+    }
+    if (!env.ORIGIN_URL || !env.FULHOUSE_ORIGIN_SECRET) {
+      return new Response('Сервис готовится к запуску.', {status:503,headers:{'content-type':'text/plain; charset=utf-8','cache-control':'no-store'}});
+    }
+    const target = new URL(env.ORIGIN_URL);
+    if (target.protocol !== 'https:') return new Response('Configuration error', {status:503});
+    target.pathname=url.pathname;target.search=url.search;
+    const headers=new Headers(request.headers);
+    headers.set('X-Fulhouse-Origin',env.FULHOUSE_ORIGIN_SECRET);
+    headers.delete('Host');
+    // Do not trust client-supplied upstream identity headers.
+    for (const name of ['x-openwebui-user-email','x-openwebui-user-name','x-openwebui-user-role','x-forwarded-user']) headers.delete(name);
+    const upstream=await fetch(target,new Request(request,{headers,redirect:'manual'}));
+    if (upstream.status===101) return upstream;
+    const response=new Response(upstream.body,upstream);
+    response.headers.set('Cache-Control','no-store');
+    response.headers.set('X-Content-Type-Options','nosniff');
+    response.headers.set('Referrer-Policy','same-origin');
+    response.headers.set('X-Frame-Options','DENY');
+    response.headers.set('X-Robots-Tag','noindex, nofollow');
+    return response;
+  }
+};
