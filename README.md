@@ -9,7 +9,7 @@ Private Open WebUI at https://ful.house with a Homebrew green monochrome theme, 
 - Runpod pod `1bwx2p5a5bhe6g`, NVIDIA L40S, $1.09/hour while running. Its 40 GB persistent disk is billed separately even when stopped.
 - Ollama model `huihui_ai/qwen3-coder-abliterated:30b`, stored under `/workspace/ollama`, with 32K context. Ollama only listens on loopback and is reached through a pinned SSH tunnel.
 
-The administrator starts and stops the GPU from the chat page. The controller stops it after 600 seconds without inference. A local bridge counts the complete Ollama request stream, including background requests, and blocks shutdown while requests are active. Failed startup attempts trigger a stop; API errors are retried. This is application-managed shutdown, not a provider billing cap: a prolonged Heroku or Runpod outage can delay it. The controller also stops the pod when the web application starts.
+The administrator starts and stops the GPU from the chat page. The controller stops it after 600 seconds without inference. A local bridge counts the complete Ollama request stream, including background requests, and blocks shutdown while requests are active. Failed startup attempts trigger a stop; API errors are retried. This is application-managed shutdown, not a provider billing cap: a prolonged Heroku or Runpod outage can delay it. After a web application restart, the controller reconnects to an already running pod and re-enables the idle timer, without releasing its GPU.
 
 ## Secrets
 

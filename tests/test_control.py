@@ -5,6 +5,20 @@ from unittest.mock import AsyncMock, patch
 from app.control import Controller
 
 class ControlTests(unittest.IsolatedAsyncioTestCase):
+    async def test_restart_adopts_running_pod_without_stop(self):
+        c=Controller();c.api=AsyncMock(return_value={'status':'RUNNING'})
+        c.request_start=AsyncMock()
+        await c.reconcile()
+        c.api.assert_awaited_once_with('GET')
+        c.request_start.assert_awaited_once()
+
+    async def test_restart_leaves_stopped_pod_off(self):
+        c=Controller();c.api=AsyncMock(return_value={'status':'EXITED'})
+        c.request_start=AsyncMock()
+        await c.reconcile()
+        self.assertEqual(c.phase,'stopped')
+        c.request_start.assert_not_awaited()
+
     async def test_missing_credentials_never_starts_gpu(self):
         with patch.dict(os.environ,{},clear=True):
             c=Controller();c.api=AsyncMock()

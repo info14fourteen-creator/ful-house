@@ -25,7 +25,7 @@ async def lifespan(app):
         if password_hash and not await Users.has_users():
             await Auths.insert_new_auth(email='steelstan@ful.house',password=password_hash,name='steelstan',role='admin')
         if control.key:
-            await control.stop()
+            await control.reconcile()
         bridge=await start_bridge(control)
         task=asyncio.create_task(control.idle_watch())
         try: yield

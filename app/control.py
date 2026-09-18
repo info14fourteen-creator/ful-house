@@ -27,6 +27,18 @@ class Controller:
             r.raise_for_status()
             return r.json() if r.content else {}
 
+    async def reconcile(self):
+        """Reconnect to an existing rental after a web restart without releasing its GPU."""
+        try:
+            pod = await self.api('GET')
+            if pod['status'] in ('RUNNING', 'STARTING', 'PROVISIONING'):
+                await self.request_start()
+            else:
+                self.phase = 'stopped'
+        except Exception:
+            self.phase = 'error'
+            logging.exception('GPU state reconciliation failed')
+
     async def request_start(self):
         async with self.lock:
             if not self.key or not os.getenv('RUNPOD_SSH_KEY') or not os.getenv('RUNPOD_SSH_HOST_KEY'):
