@@ -16,7 +16,13 @@ export default {
     headers.delete('Host');
     // Do not trust client-supplied upstream identity headers.
     for (const name of ['x-openwebui-user-email','x-openwebui-user-name','x-openwebui-user-role','x-forwarded-user']) headers.delete(name);
-    const upstream=await fetch(target,new Request(request,{headers,redirect:'manual'}));
+    const navigation=request.method==='GET' && ['/', '/auth'].includes(url.pathname);
+    let upstream;
+    try {
+      upstream=await fetch(target,new Request(request,{headers,redirect:'manual',...(navigation?{signal:AbortSignal.timeout(5000)}:{})}));
+    } catch {
+      upstream=new Response('Origin temporarily unavailable',{status:503});
+    }
     if (upstream.status===101) return upstream;
     if ([502,503,504].includes(upstream.status) && request.method==='GET' && ['/', '/auth'].includes(url.pathname)) {
       const fallback=await env.ASSETS.fetch(new URL('/boot.html',url));
