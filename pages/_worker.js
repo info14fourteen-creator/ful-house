@@ -56,8 +56,8 @@ export default {
     response.headers.set('X-Robots-Tag','noindex, nofollow');
     if ((response.headers.get('content-type') || '').includes('text/html')) {
       return new HTMLRewriter()
-        .on('link[href="/static/homebrew.css"]', {element(e){e.setAttribute('href','/static/homebrew.css?v=startup-3');}})
-        .on('script[src="/static/matrix.js"]', {element(e){e.setAttribute('src','/static/matrix.js?v=startup-3');}})
+        .on('link[href="/static/homebrew.css"]', {element(e){e.setAttribute('href','/static/homebrew.css?v=startup-4');}})
+        .on('script[src="/static/matrix.js"]', {element(e){e.setAttribute('src','/static/matrix.js?v=startup-4');}})
         .transform(response);
     }
     return response;
