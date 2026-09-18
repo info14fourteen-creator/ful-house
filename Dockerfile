@@ -1,4 +1,4 @@
-FROM ghcr.io/open-webui/open-webui:v0.11.3-slim
+FROM ghcr.io/open-webui/open-webui:v0.11.3-slim@sha256:bb3633af77b35d97783affc9cd8097d8a6dc89fedd5a410ce9a50d85556a870c
 USER root
 RUN apt-get update && apt-get install -y --no-install-recommends openssh-client && rm -rf /var/lib/apt/lists/*
 COPY app /app/backend/app
