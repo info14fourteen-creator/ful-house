@@ -1,6 +1,7 @@
 """Single-pod lifecycle, pinned SSH tunnel, and idle shutdown."""
 import asyncio
 import json
+import logging
 import os
 from pathlib import Path
 import time
@@ -71,6 +72,7 @@ class Controller:
                 r=await client.post('http://127.0.0.1:11434/api/generate',json={'model':MODEL,'prompt':'','stream':False,'keep_alive':-1});r.raise_for_status()
             self.phase='ready';self.last_activity=time.monotonic()
         except Exception:
+            logging.exception("GPU startup failed")
             # Failed provisioning must not leave a newly started GPU billing silently.
             try: await self.api('POST','/action',json={'action':'stop'})
             except Exception: pass

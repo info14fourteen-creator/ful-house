@@ -7,15 +7,17 @@ from starlette.responses import PlainTextResponse
 loaded=None
 context=None
 loading=None
+startup_error=False
 
 async def initialize():
-    global loaded,context
+    global loaded,context,startup_error
     try:
         module=await asyncio.to_thread(importlib.import_module,'app.main')
         context=module.upstream.router.lifespan_context(module.upstream)
         await context.__aenter__()
         loaded=module.app
     except Exception:
+        startup_error=True
         logging.exception('Open WebUI startup failed')
 
 async def app(scope,receive,send):
@@ -36,4 +38,4 @@ async def app(scope,receive,send):
     elif scope['type']=='websocket':
         await send({'type':'websocket.close','code':1013})
     else:
-        await PlainTextResponse('Fullhouse запускается. Обновите страницу через несколько секунд.',status_code=503,headers={'Retry-After':'5','Cache-Control':'no-store'})(scope,receive,send)
+        await PlainTextResponse('Ошибка запуска интерфейса.' if startup_error else 'Fullhouse запускается. Обновите страницу через несколько секунд.',status_code=503,headers={'Retry-After':'5','Cache-Control':'no-store','X-Fullhouse-State':'error' if startup_error else 'starting'})(scope,receive,send)
