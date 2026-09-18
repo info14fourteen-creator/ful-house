@@ -20,5 +20,6 @@ html{filter:none!important}.dark body{background:#000!important}
 #chat-pane .max-w-2xl:has(button.waterfall[role="listitem"]),
 #chat-pane .w-fit:has(button[aria-label^="Get information on"]),
 #model-selector-model-button,
+#response-message-model-name,
 [role="tooltip"]{display:none!important}
 #chat-input [data-placeholder]::before{content:none!important}
