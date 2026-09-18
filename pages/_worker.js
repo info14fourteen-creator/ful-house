@@ -1,10 +1,19 @@
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (['/static/homebrew.css','/static/matrix.js'].includes(url.pathname)) {
+    if (['/static/homebrew.css','/static/matrix.js','/static/terminal-login.css','/static/terminal-login.js'].includes(url.pathname)) {
       const asset=await env.ASSETS.fetch(request);
       const response=new Response(asset.body,asset);
       response.headers.set('Cache-Control','no-cache');
+      return response;
+    }
+    if (request.method==='GET' && url.pathname==='/auth') {
+      const asset=await env.ASSETS.fetch(new URL('/login.html',url));
+      const response=new Response(asset.body,asset);
+      response.headers.set('Cache-Control','no-store');
+      response.headers.set('X-Content-Type-Options','nosniff');
+      response.headers.set('X-Frame-Options','DENY');
+      response.headers.set('Referrer-Policy','same-origin');
       return response;
     }
     // Never publish source archives, configuration, or local environment files.

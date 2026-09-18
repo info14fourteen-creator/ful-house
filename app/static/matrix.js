@@ -36,9 +36,11 @@
     const cell=19,drops=Array.from({length:Math.ceil(canvas.width/cell)},()=>-Math.random()*80),glyphs='01ПРАВЕЦFULHOUSEアイウエオカキクケコ';let last=0;
     function draw(t){if(wait.hidden)return;frame=requestAnimationFrame(draw);if(t-last<55)return;last=t;ctx.fillStyle='rgba(0,0,0,.065)';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.font='14px monospace';drops.forEach((y,i)=>{ctx.fillStyle=Math.random()>.98?'#d3ffce':'#38b72f';ctx.fillText(glyphs[Math.floor(Math.random()*glyphs.length)],i*cell,y*cell);if(y*cell>canvas.height&&Math.random()>.985)drops[i]=-10;else drops[i]++;});}frame=requestAnimationFrame(draw);
   }
-  // The backend accepts steelstan as an alias for the private admin email.
-  const observer=new MutationObserver(()=>{const input=document.querySelector('input[type=email]');if(input&&location.pathname.startsWith('/auth')){input.type='text';input.placeholder='steelstan';input.autocomplete='username';input.setAttribute('aria-label','Логин');}});
-  observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['type']});
-  document.querySelectorAll('form').forEach(form=>{if(location.pathname.startsWith('/auth'))form.noValidate=true;});
+  // Upstream SPA redirects must reach the dedicated terminal login at the edge.
+  let redirecting=false;
+  function terminalLogin(){if(!redirecting&&location.pathname==='/auth'){redirecting=true;location.replace('/auth'+location.search);}}
+  const observer=new MutationObserver(terminalLogin);
+  observer.observe(document.body,{childList:true,subtree:true});
+  addEventListener('popstate',terminalLogin);terminalLogin();
   refresh();setInterval(()=>{if(!document.hidden)refresh();},4000);
 })();

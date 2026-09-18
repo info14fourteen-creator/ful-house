@@ -6,8 +6,8 @@ Private Open WebUI at https://ful.house with a Homebrew green monochrome theme, 
 
 - Cloudflare Pages project `ful-house` proxies to Heroku `fulhouse-ai`. Theme assets and the cold-start page are served at the edge.
 - Heroku Standard-2X (1 GB, $50/month) and Postgres essential-0 ($5/month). Chats and accounts persist in Postgres.
-- Runpod pod `1bwx2p5a5bhe6g`, NVIDIA L40S, $1.09/hour while running. Its 40 GB persistent disk is billed separately even when stopped.
-- Ollama model `huihui_ai/qwen3-coder-abliterated:30b`, stored under `/workspace/ollama`, with 32K context. Ollama only listens on loopback and is reached through a pinned SSH tunnel.
+- Runpod pod `yoiyku6juqr9v4`, NVIDIA L40S, $1.09/hour while running. Its 40 GB persistent disk is billed separately even when stopped.
+- Ollama 0.34.2, model `huihui_ai/qwen3-coder-abliterated:30b`, stored under `/workspace/ollama`, with 32K context. Ollama only listens on loopback and is reached through a pinned SSH tunnel.
 
 The administrator starts and stops the GPU from the chat page. The controller stops it after 600 seconds without inference. A local bridge counts the complete Ollama request stream, including background requests, and blocks shutdown while requests are active. Failed startup attempts trigger a stop; API errors are retried. This is application-managed shutdown, not a provider billing cap: a prolonged Heroku or Runpod outage can delay it. After a web application restart, the controller reconnects to an already running pod and re-enables the idle timer, without releasing its GPU.
 
@@ -45,3 +45,5 @@ Tests cover request/stop exclusion, API failure handling, login alias, blocked s
 The legacy website, including previously uncommitted local work, is preserved in `archive/2026-09-19-legacy-site`, with a SHA-256 manifest. It is excluded from both deployments. The original local website folder also remains intact.
 
 File uploads currently use ephemeral Heroku storage; do not use this deployment as a document archive. Code execution, code interpreter and web search are disabled. Image generation is a separate future integration; this deployment provides the coding chat model.
+
+When resuming returns “not enough free GPUs”, the previous physical host has no available slot. This is a Runpod capacity limit, not a failed model download. A new pod needs the model volume and SSH identity provisioned, followed by updating `RUNPOD_POD_ID` and the verified host key in Heroku. Stopping a pod does not reserve its GPU for the next launch.
