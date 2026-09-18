@@ -7,7 +7,7 @@
   const controls=document.createElement('aside');
   controls.id='fh-controls'; controls.hidden=true; controls.setAttribute('aria-label','Управление сервером');
   controls.innerHTML='<span id="fh-dot"></span><span id="fh-status" role="status" aria-live="polite">Проверяем сервер…</span><button id="fh-toggle" type="button">Запустить</button>';
-  const wait=document.createElement('section');wait.id='fh-wait';wait.hidden=true;wait.setAttribute('aria-label','Запуск модели');
+  const wait=document.createElement('section');wait.id='fh-wait';wait.hidden=true;wait.setAttribute('aria-label','Запуск сервера');
   wait.innerHTML='<canvas id="fh-rain" aria-hidden="true"></canvas><div class="fh-wait-copy"><div class="fh-eyebrow">FUL.HOUSE / ПРАВЕЦ 8А</div><h2>Пробуждаем машину<span class="fh-cursor"></span></h2><p id="fh-phase" role="status" aria-live="polite">Запускаем сервер</p><button id="fh-hide" type="button">Вернуться к чатам</button></div>';
   document.body.append(controls,wait);
   const status=controls.querySelector('#fh-status'),toggle=controls.querySelector('button'),phase=wait.querySelector('#fh-phase');
@@ -16,7 +16,7 @@
   function hideWait(){wait.hidden=true;cancelAnimationFrame(frame);previousFocus?.focus();}
   wait.querySelector('button').onclick=hideWait;
   wait.addEventListener('keydown',e=>{if(e.key==='Escape')hideWait();if(e.key==='Tab'){e.preventDefault();wait.querySelector('button').focus();}});
-  const phrases={stopped:'GPU выключен',starting:'Запускаем сервер',loading:'Загружаем модель',ready:'Модель готова',stopping:'Останавливаем GPU',unconfigured:'Нужно подключить управление GPU',error:'Ошибка запуска — можно повторить'};
+  const phrases={stopped:'GPU выключен',starting:'Запускаем сервер',loading:'Подготовка',ready:'Готово',stopping:'Останавливаем GPU',unconfigured:'Нужно подключить управление GPU',error:'Ошибка запуска — можно повторить'};
   async function api(path,method='GET'){
     const token=localStorage.getItem('token'); if(!token)throw new Error('auth');
     const r=await fetch('/fulhouse/api/'+path,{method,headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'}});

@@ -15,3 +15,10 @@ html{filter:none!important}.dark body{background:#000!important}
 
 /* Preserve monochrome text where upstream utility classes set white. */
 .dark .text-white,.dark .dark\:text-white,.dark .prose{color:var(--fh-fg)!important}
+
+/* Quiet chat: hide onboarding chrome, never message contents. */
+#chat-pane .max-w-2xl:has(button.waterfall[role="listitem"]),
+#chat-pane .w-fit:has(button[aria-label^="Get information on"]),
+#model-selector-model-button,
+[role="tooltip"]{display:none!important}
+#chat-input [data-placeholder]::before{content:none!important}
