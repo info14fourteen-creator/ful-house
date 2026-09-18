@@ -1,6 +1,8 @@
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (['/favicon.ico','/favicon.png','/static/favicon.png','/static/favicon.ico','/static/fulhouse-icon.png'].includes(url.pathname)) return env.ASSETS.fetch(new URL('/static/fulhouse-icon.png',url));
+    if (url.pathname==='/favicon.svg') return env.ASSETS.fetch(request);
     if (['/static/homebrew.css','/static/matrix.js','/static/terminal-login.css','/static/terminal-login.js'].includes(url.pathname)) {
       const asset=await env.ASSETS.fetch(request);
       const response=new Response(asset.body,asset);
