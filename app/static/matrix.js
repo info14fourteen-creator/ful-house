@@ -38,6 +38,7 @@
   }
   // The backend accepts steelstan as an alias for the private admin email.
   const observer=new MutationObserver(()=>{const input=document.querySelector('input[type=email]');if(input&&location.pathname.startsWith('/auth')){input.type='text';input.placeholder='steelstan';input.autocomplete='username';input.setAttribute('aria-label','Логин');}});
-  observer.observe(document.body,{childList:true,subtree:true});
+  observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['type']});
+  document.querySelectorAll('form').forEach(form=>{if(location.pathname.startsWith('/auth'))form.noValidate=true;});
   refresh();setInterval(()=>{if(!document.hidden)refresh();},4000);
 })();
