@@ -1,6 +1,12 @@
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (['/static/homebrew.css','/static/matrix.js'].includes(url.pathname)) {
+      const asset=await env.ASSETS.fetch(request);
+      const response=new Response(asset.body,asset);
+      response.headers.set('Cache-Control','no-cache');
+      return response;
+    }
     // Never publish source archives, configuration, or local environment files.
     if (/^\/(archive(?:\/|$)|\.env(?:\.|$)|\.git(?:\/|$))/.test(url.pathname)) {
       return new Response('Not found', {status:404});

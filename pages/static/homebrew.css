@@ -1,0 +1,14 @@
+/* Fullhouse personal theme. Terminal Homebrew profile, 2026-09-19. */
+:root{color-scheme:dark;--fh-bg:#000;--fh-fg:#63d957;--fh-bright:#38fe27;--fh-line:#173d1b;--color-gray-50:#d1f7ce;--color-gray-100:#b9eeb2;--color-gray-200:#93da89;--color-gray-300:#74c568;--color-gray-400:#63a75c;--color-gray-500:#416f3c;--color-gray-600:#234a28;--color-gray-700:#18331c;--color-gray-800:#0c1b10;--color-gray-850:#08130b;--color-gray-900:#050b07;--color-gray-950:#000}
+html,body{background:#000!important;color:var(--fh-fg)!important;font-family:'Andale Mono','SFMono-Regular',Consolas,monospace!important}
+body,input,textarea,button,pre,code{font-family:'Andale Mono','SFMono-Regular',Consolas,monospace!important}
+::selection{background:#225629;color:#c9ffc4}input,textarea,[contenteditable]{caret-color:var(--fh-bright)}
+html{filter:none!important}.dark body{background:#000!important}
+#fh-controls{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--fh-line);border-radius:10px;background:#061009f5;color:var(--fh-fg);font-size:11px;box-shadow:0 6px 22px #0008}
+#fh-controls button{border:1px solid #316b35;border-radius:6px;padding:6px 9px;color:#a5f49b;background:#0c2211;cursor:pointer}#fh-controls button:disabled{opacity:.45;cursor:wait}#fh-controls button:focus-visible,#fh-wait button:focus-visible{outline:2px solid #38fe27;outline-offset:3px}
+#fh-dot{width:6px;height:6px;border-radius:50%;background:#517755}#fh-dot[data-ready=true]{background:#38fe27;box-shadow:0 0 9px #38fe2780}
+#fh-wait{position:fixed;inset:0;z-index:1000;background:#000;display:grid;place-items:center;color:#63d957}#fh-wait[hidden],#fh-controls[hidden]{display:none!important}
+#fh-rain{position:absolute;inset:0;width:100%;height:100%;opacity:.65;pointer-events:none}
+.fh-wait-copy{position:relative;width:min(460px,calc(100% - 40px));padding:36px;border:1px solid #214b27;background:#000e;border-radius:4px;box-shadow:0 0 70px #001f09}.fh-eyebrow{font-size:10px;letter-spacing:.28em;color:#5e9664}.fh-wait-copy h2{font-size:26px;margin:22px 0 12px;letter-spacing:-.07em;color:#99f38c}.fh-wait-copy p{font-size:13px;line-height:1.7;margin-bottom:24px}.fh-wait-copy button{padding:9px 12px;background:#092512;border:1px solid #316b35;color:#8de882;border-radius:4px;cursor:pointer}.fh-cursor{display:inline-block;width:9px;height:22px;background:#38fe27;margin-left:6px;animation:fh-blink 1s steps(1) infinite;vertical-align:middle}@keyframes fh-blink{50%{opacity:0}}
+@media(max-width:640px){#fh-controls{bottom:5px;right:6px;left:6px;justify-content:center;padding:5px;gap:7px;font-size:10px}.fh-wait-copy{padding:25px}}
+@media(prefers-reduced-motion:reduce){.fh-cursor{animation:none}#fh-rain{display:none}}
