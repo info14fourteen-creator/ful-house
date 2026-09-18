@@ -11,7 +11,10 @@
   if (last > now()) last = now();
   let authenticated = !!storage.getItem('token'), exiting = false, frame = 0;
   let lastWrite = 0, swallowClickUntil = 0;
-  if (!authenticated) last = now();
+  if (!authenticated) {
+    last = Number(win.sessionStorage.getItem('fh-anon-last-activity')) || now();
+    win.sessionStorage.setItem('fh-anon-last-activity', String(last));
+  }
   storage.setItem(ACTIVITY, String(last));
   const screen = doc.createElement('div');
   screen.id = 'fh-screensaver'; screen.hidden = true;
@@ -52,6 +55,7 @@
     const token = storage.getItem('token');
     storage.removeItem('token');
     win.sessionStorage.removeItem('fh-start-after-login');
+    win.sessionStorage.removeItem('fh-anon-last-activity');
     // Revoke upstream session and clear its HttpOnly cookie as well as local auth.
     try {
       await win.fetch('/api/v1/auths/signout', {
@@ -73,7 +77,8 @@
     if (elapsed >= SCREEN_MS) show();
   }
   function activity(event) {
-    if (!event.isTrusted || exiting) return;
+    if (!event.isTrusted) return;
+    if (exiting) { event.preventDefault(); event.stopImmediatePropagation(); return; }
     // Check expiry BEFORE handling wake input (including after laptop sleep).
     tick();
     if (exiting) { event.preventDefault(); event.stopImmediatePropagation(); return; }
@@ -82,6 +87,7 @@
       event.preventDefault(); event.stopImmediatePropagation(); swallowClickUntil = now() + 500;
     }
     last = now();
+    if (!authenticated) win.sessionStorage.setItem('fh-anon-last-activity', String(last));
     if (wasVisible || last - lastWrite >= 500) { storage.setItem(ACTIVITY, String(last)); lastWrite = last; }
     hide();
   }

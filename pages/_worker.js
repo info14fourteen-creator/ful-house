@@ -56,7 +56,7 @@ export default {
     response.headers.set('X-Robots-Tag','noindex, nofollow');
     if ((response.headers.get('content-type') || '').includes('text/html')) {
       return new HTMLRewriter()
-        .on('head', {element(e){e.append('<link rel="stylesheet" href="/static/idle.css?v=idle-1"><script defer src="/static/idle.js?v=idle-1"></script>',{html:true});}})
+        .on('head', {element(e){e.append('<link rel="stylesheet" href="/static/idle.css?v=idle-3"><script defer src="/static/idle.js?v=idle-3"></script>',{html:true});}})
         .on('link[href="/static/homebrew.css"]', {element(e){e.setAttribute('href','/static/homebrew.css?v=startup-4');}})
         .on('script[src="/static/matrix.js"]', {element(e){e.setAttribute('src','/static/matrix.js?v=startup-4');}})
         .transform(response);

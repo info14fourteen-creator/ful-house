@@ -11,7 +11,7 @@ function setup(auth=true) {
   const canvas={getContext(){return null;}};
   const win={
     Date:{now:()=>time},localStorage:{getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v),removeItem:k=>values.delete(k)},
-    sessionStorage:{removeItem(){}},document:{hidden:false,body:{append(){}},createElement:()=>screen,addEventListener:(k,f)=>docListeners[k]=f},
+    sessionStorage:{getItem(){return null;},setItem(){},removeItem(){}},document:{hidden:false,body:{append(){}},createElement:()=>screen,addEventListener:(k,f)=>docListeners[k]=f},
     innerWidth:100,innerHeight:100,matchMedia:()=>({matches:false}),requestAnimationFrame:()=>1,cancelAnimationFrame(){},
     fetch:async(...args)=>{calls.push(args);return {ok:true};},AbortSignal:{timeout:()=>null},location:{replace:url=>urls.push(url)},
     addEventListener:(k,f)=>listeners[k]=f,setInterval:f=>interval=f
