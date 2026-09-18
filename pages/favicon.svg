@@ -1,1 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#38fe27" d="M0 0h32v32H0z"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="13" fill="#010805"/><path stroke="#13e85a" stroke-opacity=".38" d="M8 5v18M17 0v15M47 3v20M56 0v16M10 41v17M52 39v22"/><rect x="2" y="2" width="60" height="60" rx="11" fill="none" stroke="#31ff78" stroke-opacity=".72"/>
+  <g text-anchor="middle" dominant-baseline="central" fill="#c9ffd9" stroke="#20ff68" stroke-width=".7" font-family="monospace" font-size="37" font-weight="700">
+    <text x="32" y="31">H<animate attributeName="opacity" values="1;0;0;0" keyTimes="0;.25;.5;.75" dur="1.6s" calcMode="discrete" repeatCount="indefinite"/></text><text x="32" y="31" opacity="0">F<animate attributeName="opacity" values="0;1;0;0" keyTimes="0;.25;.5;.75" dur="1.6s" calcMode="discrete" repeatCount="indefinite"/></text><text x="32" y="31" opacity="0">U<animate attributeName="opacity" values="0;0;1;0" keyTimes="0;.25;.5;.75" dur="1.6s" calcMode="discrete" repeatCount="indefinite"/></text><text x="32" y="31" opacity="0">S<animate attributeName="opacity" values="0;0;0;1" keyTimes="0;.25;.5;.75" dur="1.6s" calcMode="discrete" repeatCount="indefinite"/></text>
+  </g>
+</svg>

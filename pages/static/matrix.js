@@ -8,7 +8,7 @@
   controls.id='fh-controls'; controls.hidden=true; controls.setAttribute('aria-label','Управление сервером');
   controls.innerHTML='<span id="fh-dot"></span><span id="fh-status" role="status" aria-live="polite">Проверяем сервер…</span><button id="fh-toggle" type="button">Запустить</button>';
   const wait=document.createElement('section');wait.id='fh-wait';wait.hidden=true;wait.setAttribute('aria-label','Запуск сервера');
-  wait.innerHTML='<canvas id="fh-rain" aria-hidden="true"></canvas><div class="fh-wait-copy"><div class="fh-eyebrow">FUL.HOUSE / ПРАВЕЦ 8А</div><h2>Пробуждаем машину<span class="fh-cursor"></span></h2><p id="fh-phase" role="status" aria-live="polite">Запускаем сервер</p><button id="fh-hide" type="button">Вернуться к чатам</button></div>';
+  wait.innerHTML='<canvas id="fh-rain" aria-hidden="true"></canvas><div class="fh-wait-copy"><img src="/matrix-symbol-logo.svg?v=brand-1" alt="ful.house" width="48" height="48"><div class="fh-eyebrow">FUL.HOUSE / ПРАВЕЦ 8А</div><h2>Пробуждаем машину<span class="fh-cursor"></span></h2><p id="fh-phase" role="status" aria-live="polite">Запускаем сервер</p><button id="fh-hide" type="button">Вернуться к чатам</button></div>';
   document.body.append(controls,wait);
   const status=controls.querySelector('#fh-status'),toggle=controls.querySelector('button'),phase=wait.querySelector('#fh-phase');
   let running=false,busy=false,frame=0,previousFocus=null;

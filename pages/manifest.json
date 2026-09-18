@@ -1,0 +1,1 @@
+{"name": "ful.house", "short_name": "ful.house", "start_url": "/", "display": "standalone", "background_color": "#000000", "theme_color": "#000000", "icons": [{"src": "/matrix-symbol-logo.png?v=brand-1", "type": "image/png", "sizes": "1024x1024", "purpose": "any"}], "share_target": {"action": "/", "method": "GET", "params": {"text": "shared"}}}

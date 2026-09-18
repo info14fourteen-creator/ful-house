@@ -27,3 +27,7 @@ html{filter:none!important}.dark body{background:#000!important}
 #chat-pane .mt-4:has(button[aria-label^="Follow up:"]){display:none!important}
 #chat-pane p,#chat-pane .cm-editor,#chat-pane .cm-editor *{color:var(--fh-fg)!important}
 #chat-pane .cm-editor,#chat-pane .cm-gutters,#chat-pane .cm-activeLine,#chat-pane .cm-activeLineGutter{background:#000!important}
+
+/* Brand artwork keeps its own shape, without circular cropping. */
+img[data-fh-brand]{border-radius:0!important;object-fit:contain!important;background:transparent!important}
+.fh-wait-copy>img{display:block;margin-bottom:18px}

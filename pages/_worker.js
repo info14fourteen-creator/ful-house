@@ -1,9 +1,21 @@
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (['/favicon.ico','/favicon.png','/static/favicon.png','/static/favicon.ico','/static/fulhouse-icon.png'].includes(url.pathname)) return env.ASSETS.fetch(new URL('/static/fulhouse-icon.png',url));
-    if (url.pathname==='/favicon.svg') return env.ASSETS.fetch(request);
-    if (['/static/homebrew.css','/static/matrix.js','/static/terminal-login.css','/static/terminal-login.js','/static/idle.js','/static/idle.css'].includes(url.pathname)) {
+    const brand = {
+      '/favicon.ico':'/favicon.ico','/static/favicon.ico':'/favicon.ico',
+      '/favicon.svg':'/favicon.svg','/static/favicon.svg':'/favicon.svg',
+      '/favicon.png':'/favicon-32x32.png','/favicon-32x32.png':'/favicon-32x32.png',
+      '/static/favicon.png':'/favicon-32x32.png','/static/favicon-96x96.png':'/favicon-32x32.png','/static/fulhouse-icon.png':'/favicon-32x32.png',
+      '/apple-touch-icon.png':'/apple-touch-icon.png','/static/apple-touch-icon.png':'/apple-touch-icon.png',
+      '/matrix-symbol-logo.svg':'/matrix-symbol-logo.svg','/matrix-symbol-logo.png':'/matrix-symbol-logo.png',
+      '/static/logo.png':'/matrix-symbol-logo.png','/static/splash.png':'/matrix-symbol-logo.png','/static/splash-dark.png':'/matrix-symbol-logo.png',
+      '/manifest.json':'/manifest.json'
+    };
+    if (brand[url.pathname]) {
+      const asset=await env.ASSETS.fetch(new URL(brand[url.pathname],url));
+      const response=new Response(asset.body,asset);response.headers.set('Cache-Control','no-cache');return response;
+    }
+    if (['/static/homebrew.css','/static/matrix.js','/static/terminal-login.css','/static/terminal-login.js','/static/idle.js','/static/idle.css','/static/branding.js'].includes(url.pathname)) {
       const asset=await env.ASSETS.fetch(request);
       const response=new Response(asset.body,asset);
       response.headers.set('Cache-Control','no-cache');
@@ -56,9 +68,9 @@ export default {
     response.headers.set('X-Robots-Tag','noindex, nofollow');
     if ((response.headers.get('content-type') || '').includes('text/html')) {
       return new HTMLRewriter()
-        .on('head', {element(e){e.append('<link rel="stylesheet" href="/static/idle.css?v=idle-3"><script defer src="/static/idle.js?v=idle-3"></script>',{html:true});}})
-        .on('link[href="/static/homebrew.css"]', {element(e){e.setAttribute('href','/static/homebrew.css?v=startup-4');}})
-        .on('script[src="/static/matrix.js"]', {element(e){e.setAttribute('src','/static/matrix.js?v=startup-4');}})
+        .on('head', {element(e){e.append('<script defer src="/static/branding.js?v=brand-1"></script><link rel="stylesheet" href="/static/idle.css?v=idle-3"><script defer src="/static/idle.js?v=idle-3"></script>',{html:true});}})
+        .on('link[href="/static/homebrew.css"]', {element(e){e.setAttribute('href','/static/homebrew.css?v=brand-1');}})
+        .on('script[src="/static/matrix.js"]', {element(e){e.setAttribute('src','/static/matrix.js?v=brand-1');}})
         .transform(response);
     }
     return response;
