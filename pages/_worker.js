@@ -18,6 +18,13 @@ export default {
     for (const name of ['x-openwebui-user-email','x-openwebui-user-name','x-openwebui-user-role','x-forwarded-user']) headers.delete(name);
     const upstream=await fetch(target,new Request(request,{headers,redirect:'manual'}));
     if (upstream.status===101) return upstream;
+    if ([502,503,504].includes(upstream.status) && request.method==='GET' && ['/', '/auth'].includes(url.pathname)) {
+      const fallback=await env.ASSETS.fetch(new URL('/boot.html',url));
+      const boot=new Response(fallback.body,{status:503,headers:fallback.headers});
+      boot.headers.set('Cache-Control','no-store');
+      boot.headers.set('Retry-After','10');
+      return boot;
+    }
     const response=new Response(upstream.body,upstream);
     response.headers.set('Cache-Control','no-store');
     response.headers.set('X-Content-Type-Options','nosniff');
