@@ -12,6 +12,7 @@
   document.body.append(controls,wait);
   const status=controls.querySelector('#fh-status'),toggle=controls.querySelector('button'),phase=wait.querySelector('#fh-phase');
   let running=false,busy=false,frame=0,previousFocus=null;
+  let startAfterLogin=sessionStorage.getItem('fh-start-after-login')==='1';
   function showWait(){previousFocus=document.activeElement;wait.hidden=false;wait.querySelector('button').focus();animate();}
   function hideWait(){wait.hidden=true;cancelAnimationFrame(frame);previousFocus?.focus();}
   wait.querySelector('button').onclick=hideWait;
@@ -25,7 +26,12 @@
   }
   async function refresh(){
     if(!localStorage.getItem('token')){controls.hidden=true;return;}
-    try {const s=await api('status');controls.hidden=false;running=s.phase==='ready';busy=['starting','loading','stopping'].includes(s.phase);status.textContent=phrases[s.phase]||'Проверяем сервер';phase.textContent=status.textContent;controls.querySelector('#fh-dot').dataset.ready=String(running);toggle.textContent=running?'Выключить':busy?'Подождите…':'Запустить';toggle.disabled=busy||s.phase==='unconfigured';if(running&&!wait.hidden)hideWait();}
+    try {let s=await api('status');
+      if(startAfterLogin){
+        startAfterLogin=false;sessionStorage.removeItem('fh-start-after-login');
+        if(['stopped','error'].includes(s.phase))s=await api('start','POST');
+      }
+      controls.hidden=false;running=s.phase==='ready';busy=['starting','loading','stopping'].includes(s.phase);status.textContent=phrases[s.phase]||'Проверяем сервер';phase.textContent=status.textContent;controls.querySelector('#fh-dot').dataset.ready=String(running);toggle.textContent=running?'Выключить':busy?'Подождите…':'Запустить';toggle.disabled=busy||s.phase==='unconfigured';if(running&&!wait.hidden)hideWait();}
     catch(e){if(e.message==='auth'){controls.hidden=true;hideWait();}else {status.textContent='Нет связи с сервером';phase.textContent='Связь прервалась. Повторяем проверку…';}}
   }
   toggle.onclick=async()=>{toggle.disabled=true;try{await api(running?'stop':'start','POST');if(!running)showWait();await refresh();}catch{status.textContent='Не удалось выполнить команду';toggle.disabled=false;}};
@@ -42,5 +48,6 @@
   const observer=new MutationObserver(terminalLogin);
   observer.observe(document.body,{childList:true,subtree:true});
   addEventListener('popstate',terminalLogin);terminalLogin();
+  if(startAfterLogin)showWait();
   refresh();setInterval(()=>{if(!document.hidden)refresh();},4000);
 })();

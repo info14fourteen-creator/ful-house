@@ -4,7 +4,7 @@ import os
 from starlette.responses import JSONResponse
 
 class Guard:
-    def __init__(self,app): self.app=app
+    def __init__(self,app,limiter=None): self.app=app;self.limiter=limiter
     async def __call__(self,scope,receive,send):
         if scope['type'] not in ('http','websocket'):
             return await self.app(scope,receive,send)
@@ -22,6 +22,20 @@ class Guard:
                 if origin and origin!=os.getenv('WEBUI_URL','https://ful.house'):
                     return await JSONResponse({'detail':'Invalid origin'},403)(scope,receive,send)
         if scope['type']=='http' and path=='/api/v1/auths/signin' and scope['method']=='POST':
+            if self.limiter:
+                client=self.limiter.client_key(headers)
+                try:
+                    allowed=await self.limiter.allow_login(client)
+                except Exception:
+                    return await JSONResponse({'detail':'Unavailable'},503)(scope,receive,send)
+                if not allowed:
+                    return await JSONResponse({'detail':'Unavailable'},429,headers={'Retry-After':'900'})(scope,receive,send)
+                original_send=send
+                async def limited_send(message):
+                    if message['type']=='http.response.start' and message['status']==200:
+                        await self.limiter.reset_login(client)
+                    await original_send(message)
+                send=limited_send
             chunks=[]
             while True:
                 message=await receive()

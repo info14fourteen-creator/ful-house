@@ -14,12 +14,16 @@ from open_webui.models.users import Users
 from app.control import Controller, MODEL
 from app.bridge import start_bridge
 
+from app.state import State
+state=State()
 control=Controller()
+control.store=state
 original_lifespan=upstream.router.lifespan_context
 
 @asynccontextmanager
 async def lifespan(app):
     async with original_lifespan(app):
+        await state.initialize()
         # Bootstrap directly with a precomputed bcrypt hash; plaintext never needed.
         password_hash=os.getenv('FULHOUSE_ADMIN_PASSWORD_HASH')
         if password_hash and not await Users.has_users():
@@ -57,4 +61,4 @@ upstream.router.routes[0:0]=router.routes
 
 from app.guard import Guard
 
-app=Guard(upstream)
+app=Guard(upstream,state)
