@@ -12,3 +12,6 @@ html{filter:none!important}.dark body{background:#000!important}
 .fh-wait-copy{position:relative;width:min(460px,calc(100% - 40px));padding:36px;border:1px solid #214b27;background:#000e;border-radius:4px;box-shadow:0 0 70px #001f09}.fh-eyebrow{font-size:10px;letter-spacing:.28em;color:#5e9664}.fh-wait-copy h2{font-size:26px;margin:22px 0 12px;letter-spacing:-.07em;color:#99f38c}.fh-wait-copy p{font-size:13px;line-height:1.7;margin-bottom:24px}.fh-wait-copy button{padding:9px 12px;background:#092512;border:1px solid #316b35;color:#8de882;border-radius:4px;cursor:pointer}.fh-cursor{display:inline-block;width:9px;height:22px;background:#38fe27;margin-left:6px;animation:fh-blink 1s steps(1) infinite;vertical-align:middle}@keyframes fh-blink{50%{opacity:0}}
 @media(max-width:640px){#fh-controls{bottom:5px;right:6px;left:6px;justify-content:center;padding:5px;gap:7px;font-size:10px}.fh-wait-copy{padding:25px}}
 @media(prefers-reduced-motion:reduce){.fh-cursor{animation:none}#fh-rain{display:none}}
+
+/* Preserve monochrome text where upstream utility classes set white. */
+.dark .text-white,.dark .dark\:text-white,.dark .prose{color:var(--fh-fg)!important}
