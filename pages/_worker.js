@@ -54,6 +54,12 @@ export default {
     response.headers.set('Referrer-Policy','same-origin');
     response.headers.set('X-Frame-Options','DENY');
     response.headers.set('X-Robots-Tag','noindex, nofollow');
+    if ((response.headers.get('content-type') || '').includes('text/html')) {
+      return new HTMLRewriter()
+        .on('link[href="/static/homebrew.css"]', {element(e){e.setAttribute('href','/static/homebrew.css?v=quiet-1');}})
+        .on('script[src="/static/matrix.js"]', {element(e){e.setAttribute('src','/static/matrix.js?v=quiet-1');}})
+        .transform(response);
+    }
     return response;
   }
 };
