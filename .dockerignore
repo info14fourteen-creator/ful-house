@@ -2,3 +2,5 @@
 !Dockerfile
 !app/
 !app/**
+!ops/
+!ops/engineer-tool.py

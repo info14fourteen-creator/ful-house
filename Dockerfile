@@ -2,7 +2,7 @@ FROM ghcr.io/open-webui/open-webui:v0.11.3-slim@sha256:bb3633af77b35d97783affc9c
 USER root
 RUN apt-get update && apt-get install -y --no-install-recommends openssh-client && rm -rf /var/lib/apt/lists/*
 COPY app /app/backend/app
-COPY ops /app/backend/ops
+COPY ops/engineer-tool.py /app/backend/ops/engineer-tool.py
 COPY app/static/homebrew.css /app/backend/open_webui/static/homebrew.css
 COPY app/static/matrix.js /app/backend/open_webui/static/matrix.js
 RUN python -c "from pathlib import Path;p=Path('/app/build/index.html');s=p.read_text();p.write_text(s.replace('</head>','<link rel=\"stylesheet\" href=\"/static/homebrew.css\"><script defer src=\"/static/matrix.js\"></script></head>'))"
