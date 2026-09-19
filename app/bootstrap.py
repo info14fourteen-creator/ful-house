@@ -64,10 +64,15 @@ async def configure_engineer(upstream):
     else:
         await Tools.insert_new_tool(user.id, tool_form, specs)
 
-    async def upsert_model(model_id, name, base_model_id):
+    async def upsert_model(model_id, name, base_model_id, openai_chat=False):
         existing_model = await Models.get_model_by_id(model_id)
         params = dict(existing_model.params.model_dump() if existing_model else {})
         params.update({'system': rules, 'function_calling': 'native'})
+        if openai_chat:
+            # OpenAI chat/completions rejects function tools when reasoning_effort is set.
+            # Keep reasoning disabled for this wrapper; true Codex reasoning uses openai_codex.
+            params['reasoning_effort'] = 'none'
+            params.pop('reasoning', None)
         meta = dict(existing_model.meta.model_dump() if existing_model else {})
         meta['knowledge'] = None
         meta['toolIds'] = [TOOL_ID]
@@ -90,5 +95,6 @@ async def configure_engineer(upstream):
         OPENAI_MODEL_ID,
         'Fullhouse OpenAI API',
         os.getenv('FULHOUSE_OPENAI_CHAT_MODEL', 'gpt-5.6-sol'),
+        openai_chat=True,
     )
     log.warning('Fullhouse bootstrap configured models=%s,%s tool=%s', MODEL_ID, OPENAI_MODEL_ID, TOOL_ID)
