@@ -51,4 +51,11 @@ class ControlTests(unittest.IsolatedAsyncioTestCase):
         c=Controller();c.key='test';c.api=AsyncMock(side_effect=RuntimeError())
         self.assertFalse(await c.stop());self.assertEqual(c.phase,'error')
 
+    async def test_stale_active_request_is_reaped(self):
+        c=Controller();c.phase='ready';c.request_max_seconds=1
+        self.assertTrue(await c.begin_request())
+        c.active_started[0]-=2
+        c.reap_stale_requests()
+        self.assertEqual(c.active,0)
+
 if __name__=='__main__': unittest.main()

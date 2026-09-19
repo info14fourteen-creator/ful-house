@@ -46,6 +46,7 @@ router=APIRouter(prefix='/fulhouse/api',dependencies=[Depends(get_admin_user)])
 
 @router.get('/status')
 async def status():
+    control.reap_stale_requests()
     return {'phase':control.phase,'active':control.active,'idle_seconds':control.idle_seconds,'failure_reason':control.failure_reason}
 
 @router.post('/start',status_code=202)

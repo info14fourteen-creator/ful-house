@@ -18,8 +18,10 @@ class Controller:
         self.key = os.getenv('RUNPOD_API_KEY', '')
         self.phase = 'stopped' if self.key else 'unconfigured'
         self.active = 0
+        self.active_started = []
         self.last_activity = time.monotonic()
         self.idle_seconds = int(os.getenv('GPU_IDLE_SECONDS', '600'))
+        self.request_max_seconds = int(os.getenv('GPU_REQUEST_MAX_SECONDS', '900'))
         self.lock = asyncio.Lock()
         self.job = None
         self.failure_reason = ''
@@ -220,17 +222,29 @@ class Controller:
     async def idle_watch(self):
         while True:
             await asyncio.sleep(20)
+            self.reap_stale_requests()
             if self.key and not self.active and (self.phase=='error' or (self.phase=='ready' and time.monotonic()-self.last_activity >= self.idle_seconds)):
                 await self.stop()
 
+    def reap_stale_requests(self):
+        now=time.monotonic()
+        fresh=[started for started in self.active_started if now-started <= self.request_max_seconds]
+        if len(fresh) != len(self.active_started):
+            logging.warning('GPU request accounting: reaped stale active requests stale=%s active_before=%s',len(self.active_started)-len(fresh),self.active)
+        self.active_started=fresh
+        self.active=len(fresh)
+
     async def begin_request(self):
         async with self.lock:
+            self.reap_stale_requests()
             if self.phase!='ready': return False
-            self.active+=1
+            self.active_started.append(time.monotonic())
+            self.active=len(self.active_started)
             self.last_activity=time.monotonic()
             return True
 
     async def end_request(self):
         async with self.lock:
-            self.active=max(0,self.active-1)
+            if self.active_started:self.active_started.pop(0)
+            self.active=len(self.active_started)
             self.last_activity=time.monotonic()
