@@ -49,5 +49,43 @@
   observer.observe(document.body,{childList:true,subtree:true});
   addEventListener('popstate',terminalLogin);terminalLogin();
   if(startAfterLogin)showWait();
+
+  const engines={codex:'fullhouse-codex-api',qwen:'huihui_ai/qwen3-coder-abliterated:30b'};
+  let engine=localStorage.getItem('fh-engine') || 'qwen';
+  if(!engines[engine])engine='qwen';
+  function setEngine(next){engine=engines[next]?next:'qwen';localStorage.setItem('fh-engine',engine);document.querySelectorAll('[data-fh-engine]').forEach(button=>button.dataset.active=String(button.dataset.fhEngine===engine));}
+  function installEngineButtons(){
+    if(location.pathname==='/auth')return;
+    const input=document.querySelector('textarea,[contenteditable="true"]');
+    if(!input || document.querySelector('#fh-engine-switch'))return;
+    const host=input.closest('form') || input.parentElement?.parentElement || input.parentElement;
+    if(!host)return;
+    const box=document.createElement('div');box.id='fh-engine-switch';box.setAttribute('aria-label','Model engine');
+    box.innerHTML='<button type="button" data-fh-engine="codex">CODEX</button><button type="button" data-fh-engine="qwen">QWEN</button>';
+    box.addEventListener('click',event=>{const button=event.target.closest('[data-fh-engine]');if(button)setEngine(button.dataset.fhEngine);});
+    host.append(box);setEngine(engine);
+  }
+  function rewriteBody(init){
+    if(!init?.body || typeof init.body!=='string')return init;
+    try{
+      const data=JSON.parse(init.body);
+      if(data && (Object.prototype.hasOwnProperty.call(data,'model') || Object.prototype.hasOwnProperty.call(data,'models'))){
+        const selected=engines[engine];
+        data.model=selected;
+        if(Object.prototype.hasOwnProperty.call(data,'models'))data.models=[selected];
+        if(Array.isArray(data.model))data.model=[selected];
+        return {...init,body:JSON.stringify(data)};
+      }
+    }catch{}
+    return init;
+  }
+  const nativeFetch=window.fetch.bind(window);
+  window.fetch=(resource,init={})=>{
+    const url=typeof resource==='string'?resource:resource?.url || '';
+    if(/\/(api\/chat|api\/chat\/completions|ollama\/api\/chat|v1\/chat\/completions)(?:\?|$)/.test(url))init=rewriteBody(init);
+    return nativeFetch(resource,init);
+  };
+  setInterval(installEngineButtons,700);installEngineButtons();setEngine(engine);
+
   refresh();setInterval(()=>{if(!document.hidden)refresh();},4000);
 })();

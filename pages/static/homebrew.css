@@ -31,3 +31,9 @@ html{filter:none!important}.dark body{background:#000!important}
 /* Brand artwork keeps its own shape, without circular cropping. */
 img[data-fh-brand]{border-radius:0!important;object-fit:contain!important;background:transparent!important}
 .fh-wait-copy>img{display:block;margin-bottom:18px}
+
+#fh-engine-switch{position:absolute;left:52px;bottom:10px;z-index:20;display:flex;gap:6px;align-items:center}
+#fh-engine-switch button{border:1px solid #245f2b;border-radius:5px;background:#030904;color:#4f9f49;padding:3px 7px;font-size:10px;line-height:1.2;letter-spacing:.08em;cursor:pointer;text-shadow:none}
+#fh-engine-switch button[data-active=true]{color:#38fe27;border-color:#38fe27;box-shadow:0 0 10px #38fe2740;background:#071707}
+#fh-engine-switch button:focus-visible{outline:1px solid #38fe27;outline-offset:2px}
+@media(max-width:640px){#fh-engine-switch{left:46px;bottom:8px}#fh-engine-switch button{font-size:9px;padding:3px 6px}}
