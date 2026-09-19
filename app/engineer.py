@@ -9,6 +9,7 @@ from urllib.parse import quote
 import httpx
 
 REPO='info14fourteen-creator/ful-house'
+REPO_NAME=re.compile(r'^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$')
 ACCOUNT='c49619f872e97a2fc43b245069d4a00f'
 APP='fulhouse-ai'
 WORKSPACE_LOCK=asyncio.Lock()
@@ -34,9 +35,16 @@ def branch_name(branch):
     return branch
 
 
-async def request(service,method,path,**kwargs):
+def repo_name(repo):
+    repo=(repo or REPO).strip()
+    if not REPO_NAME.fullmatch(repo) or '..' in repo:
+        raise ValueError('Use repository as owner/name')
+    return repo
+
+
+async def request(service,method,path,repo=REPO,**kwargs):
     if service=='github':
-        base=f'https://api.github.com/repos/{REPO}/'; key=os.getenv('FULHOUSE_GITHUB_TOKEN','');headers={'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+        base=f'https://api.github.com/repos/{repo_name(repo)}/'; key=os.getenv('FULHOUSE_GITHUB_TOKEN','');headers={'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
     elif service=='heroku':
         base=f'https://api.heroku.com/apps/{APP}/';key=os.getenv('FULHOUSE_HEROKU_TOKEN','');headers={'Accept':'application/vnd.heroku+json; version=3'}
     elif service=='cloudflare':
@@ -52,39 +60,69 @@ async def request(service,method,path,**kwargs):
     return response.json() if response.content else {}
 
 
-async def repository(path='',ref='main'):
+async def github_request(method,path,**kwargs):
+    key=os.getenv('FULHOUSE_GITHUB_TOKEN','')
+    if not key:raise RuntimeError('github credentials are not configured')
+    headers={'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Authorization':'Bearer '+key}
+    async with httpx.AsyncClient(timeout=30,follow_redirects=False) as client:
+        response=await client.request(method,'https://api.github.com/'+path.lstrip('/'),headers=headers,**kwargs)
+    if response.status_code>=400:
+        raise RuntimeError(f'github request failed: HTTP {response.status_code}')
+    return response.json() if response.content else {}
+
+
+async def github_repositories(query='',limit=100):
+    limit=max(1,min(int(limit),100))
+    data=await github_request('GET','user/repos',params={'affiliation':'owner,collaborator,organization_member','visibility':'all','sort':'updated','per_page':limit})
+    q=(query or '').lower().strip()
+    repos=[]
+    for item in data:
+        full=item.get('full_name','')
+        if q and q not in full.lower() and q not in (item.get('description') or '').lower():
+            continue
+        repos.append({
+            'full_name':full,
+            'private':item.get('private'),
+            'default_branch':item.get('default_branch'),
+            'updated_at':item.get('updated_at'),
+            'description':item.get('description'),
+        })
+    return {'repositories':repos[:limit], 'limit':limit}
+
+
+async def repository(repo=REPO,path='',ref='main'):
     if len(ref)>150:raise ValueError('Revision too long')
     if path:
         safe_path(path)
-        data=await request('github','GET','contents/'+quote(path,safe='/'),params={'ref':ref})
+        data=await request('github','GET','contents/'+quote(path,safe='/'),repo=repo,params={'ref':ref})
         if isinstance(data,list):return [{'path':x['path'],'type':x['type']} for x in data][:300]
         if data.get('size',0)>50000:raise ValueError('File too large; inspect in the workspace')
         return {'path':path,'sha':data['sha'],'content':base64.b64decode(data.get('content','')).decode('utf-8',errors='replace')}
-    data=await request('github','GET','git/trees/'+quote(ref,safe=''),params={'recursive':'1'})
-    return {'ref':ref,'truncated':data.get('truncated',False),'files':[x['path'] for x in data.get('tree',[]) if x['type']=='blob' and not x['path'].startswith('archive/')][:500]}
+    data=await request('github','GET','git/trees/'+quote(ref,safe=''),repo=repo,params={'recursive':'1'})
+    return {'repository':repo_name(repo),'ref':ref,'truncated':data.get('truncated',False),'files':[x['path'] for x in data.get('tree',[]) if x['type']=='blob' and not x['path'].startswith('archive/')][:500]}
 
 
-async def commit_files(branch,message,files):
+async def commit_files(repo,branch,message,files):
     branch_name(branch)
     if not message or not files or len(files)>25:raise ValueError('Provide a commit message and 1–25 files')
     if sum(len(v.encode()) for v in files.values())>200000:raise ValueError('Commit exceeds tool size limit')
     for path in files:safe_path(path)
     try:
-        tip=await request('github','GET','git/ref/heads/'+quote(branch,safe='/'))
+        tip=await request('github','GET','git/ref/heads/'+quote(branch,safe='/'),repo=repo)
     except RuntimeError as exc:
         if 'HTTP 404' not in str(exc):raise
-        tip=await request('github','GET','git/ref/heads/main')
-        await request('github','POST','git/refs',json={'ref':'refs/heads/'+branch,'sha':tip['object']['sha']})
-    parent=tip['object']['sha'];commit=await request('github','GET','git/commits/'+parent)
-    tree=await request('github','POST','git/trees',json={'base_tree':commit['tree']['sha'],'tree':[{'path':p,'mode':'100644','type':'blob','content':v} for p,v in files.items()]})
-    new=await request('github','POST','git/commits',json={'message':message,'tree':tree['sha'],'parents':[parent]})
-    await request('github','PATCH','git/refs/heads/'+quote(branch,safe='/'),json={'sha':new['sha'],'force':False})
-    return {'branch':branch,'sha':new['sha'],'url':f'https://github.com/{REPO}/commit/{new["sha"]}'}
+        tip=await request('github','GET','git/ref/heads/main',repo=repo)
+        await request('github','POST','git/refs',repo=repo,json={'ref':'refs/heads/'+branch,'sha':tip['object']['sha']})
+    parent=tip['object']['sha'];commit=await request('github','GET','git/commits/'+parent,repo=repo)
+    tree=await request('github','POST','git/trees',repo=repo,json={'base_tree':commit['tree']['sha'],'tree':[{'path':p,'mode':'100644','type':'blob','content':v} for p,v in files.items()]})
+    new=await request('github','POST','git/commits',repo=repo,json={'message':message,'tree':tree['sha'],'parents':[parent]})
+    await request('github','PATCH','git/refs/heads/'+quote(branch,safe='/'),repo=repo,json={'sha':new['sha'],'force':False})
+    return {'repository':repo_name(repo),'branch':branch,'sha':new['sha'],'url':f'https://github.com/{repo_name(repo)}/commit/{new["sha"]}'}
 
 
-async def open_pull_request(branch,title,body):
+async def open_pull_request(repo,branch,title,body):
     branch_name(branch)
-    result=await request('github','POST','pulls',json={'head':branch,'base':'main','title':title,'body':body,'draft':True})
+    result=await request('github','POST','pulls',repo=repo,json={'head':branch,'base':'main','title':title,'body':body,'draft':True})
     return {'url':result['html_url'],'number':result['number']}
 
 
@@ -92,6 +130,7 @@ async def project_status():
     from app.main import control
     out={
         'project':REPO,
+        'github_repositories_tool':'github_repositories',
         'gpu':{'phase':control.phase,'active_jobs':control.active},
         'openai':{
             'api_configured':bool(os.getenv('OPENAI_API_KEY') or os.getenv('CODEX_API_KEY')),

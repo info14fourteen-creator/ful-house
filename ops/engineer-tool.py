@@ -7,24 +7,29 @@ from app import engineer
 
 class Tools:
     async def project_status(self, __user__: dict = None) -> str:
-        """Check the configured GitHub deployment jobs, Heroku, Cloudflare and GPU status."""
+        """Check Fullhouse deployment jobs, Heroku, Cloudflare, GPU status and connected tool state."""
         engineer.admin(__user__)
         return json.dumps(await engineer.project_status(),ensure_ascii=False)
 
-    async def repository(self, path: str = '', ref: str = 'main', __user__: dict = None) -> str:
-        """Read a ful-house repository file or list project files. Empty path lists files; ref is a branch or commit."""
+    async def github_repositories(self, query: str = '', limit: int = 100, __user__: dict = None) -> str:
+        """List GitHub repositories available to the configured account. Optional query filters by name or description."""
         engineer.admin(__user__)
-        return json.dumps(await engineer.repository(path,ref),ensure_ascii=False)
+        return json.dumps(await engineer.github_repositories(query,limit),ensure_ascii=False)
 
-    async def commit_files(self, branch: str, message: str, files: dict[str,str], __user__: dict = None) -> str:
-        """Commit text files to an agent/ branch of ful-house. files maps repository paths to full new contents. Never use main."""
+    async def repository(self, repo: str = 'info14fourteen-creator/ful-house', path: str = '', ref: str = 'main', __user__: dict = None) -> str:
+        """Read a GitHub repository file or list project files. repo is owner/name. Empty path lists files; ref is a branch or commit."""
         engineer.admin(__user__)
-        return json.dumps(await engineer.commit_files(branch,message,files),ensure_ascii=False)
+        return json.dumps(await engineer.repository(repo,path,ref),ensure_ascii=False)
 
-    async def open_pull_request(self, branch: str, title: str, body: str, __user__: dict = None) -> str:
-        """Open a draft pull request from an existing agent/ branch to main. Include changes and test evidence."""
+    async def commit_files(self, repo: str, branch: str, message: str, files: dict[str,str], __user__: dict = None) -> str:
+        """Commit text files to an agent/ branch of a GitHub repo. repo is owner/name. files maps repository paths to full new contents. Never use main."""
         engineer.admin(__user__)
-        return json.dumps(await engineer.open_pull_request(branch,title,body),ensure_ascii=False)
+        return json.dumps(await engineer.commit_files(repo,branch,message,files),ensure_ascii=False)
+
+    async def open_pull_request(self, repo: str, branch: str, title: str, body: str, __user__: dict = None) -> str:
+        """Open a draft pull request from an existing agent/ branch to main in the selected repo. Include changes and test evidence."""
+        engineer.admin(__user__)
+        return json.dumps(await engineer.open_pull_request(repo,branch,title,body),ensure_ascii=False)
 
     async def deploy(self, target: str, ref: str, __user__: dict = None) -> str:
         """Deploy a user-requested revision of ful-house. target is cloudflare or heroku; ref must be main. Agent changes go through a pull request first. Then check project_status."""
