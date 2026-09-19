@@ -17,10 +17,10 @@ class Tools:
         engineer.admin(__user__)
         return json.dumps(await engineer.openwebui_files(query,limit),ensure_ascii=False)
 
-    async def openwebui_file_content(self, file_id: str, max_chars: int = 50000, __user__: dict = None) -> str:
-        """Read processed text content for an Open WebUI uploaded file by id. Increase max_chars up to 200000 for long PDFs."""
+    async def openwebui_file_content(self, file_id: str, offset: int = 0, max_chars: int = 12000, __user__: dict = None) -> str:
+        """Read a bounded text chunk for an Open WebUI uploaded file by id. Use next_offset to continue long PDFs; keep summaries instead of loading the whole file."""
         engineer.admin(__user__)
-        return json.dumps(await engineer.openwebui_file_content(file_id,max_chars),ensure_ascii=False)
+        return json.dumps(await engineer.openwebui_file_content(file_id,offset,max_chars),ensure_ascii=False)
 
     async def github_repositories(self, query: str = '', limit: int = 100, __user__: dict = None) -> str:
         """List GitHub repositories available to the configured account. Optional query filters by name or description."""

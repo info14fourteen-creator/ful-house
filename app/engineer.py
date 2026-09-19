@@ -101,9 +101,10 @@ async def openwebui_files(query='',limit=20):
     return {'files':out[:limit], 'limit':limit}
 
 
-async def openwebui_file_content(file_id,max_chars=50000):
+async def openwebui_file_content(file_id,offset=0,max_chars=12000):
     if not file_id or len(file_id)>120:raise ValueError('Provide a file id')
-    max_chars=max(1000,min(int(max_chars),200000))
+    offset=max(0,int(offset))
+    max_chars=max(1000,min(int(max_chars),30000))
     try:
         from open_webui.models.files import Files
     except Exception as exc:
@@ -114,15 +115,21 @@ async def openwebui_file_content(file_id,max_chars=50000):
     data=item.get('data') or {}
     meta=item.get('meta') or {}
     content=data.get('content') or ''
+    chunk=content[offset:offset+max_chars]
+    next_offset=offset+len(chunk) if offset+len(chunk)<len(content) else None
     return {
         'id':item.get('id'),
         'filename':item.get('filename') or meta.get('name'),
         'content_type':meta.get('content_type'),
         'size':meta.get('size'),
         'status':data.get('status'),
-        'content':content[:max_chars],
+        'offset':offset,
+        'max_chars':max_chars,
+        'next_offset':next_offset,
+        'content':chunk,
         'content_chars':len(content),
-        'truncated':len(content)>max_chars,
+        'truncated':next_offset is not None,
+        'usage':'For long PDFs, read chunks sequentially with next_offset and keep a compact running summary instead of pasting all chunks into one model turn.',
     }
 
 
