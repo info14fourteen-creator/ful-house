@@ -70,7 +70,7 @@ export default {
       return new HTMLRewriter()
         .on('head', {element(e){e.prepend('<script src="/static/locale.js?v=english-1"></script>',{html:true});e.append('<script defer src="/static/branding.js?v=brand-1"></script><link rel="stylesheet" href="/static/idle.css?v=idle-3"><script defer src="/static/idle.js?v=idle-3"></script>',{html:true});}})
         .on('link[href="/static/homebrew.css"]', {element(e){e.setAttribute('href','/static/homebrew.css?v=brand-1');}})
-        .on('script[src="/static/matrix.js"]', {element(e){e.setAttribute('src','/static/matrix.js?v=english-1');}})
+        .on('script[src="/static/matrix.js"]', {element(e){e.setAttribute('src','/static/matrix.js?v=engineer-1');}})
         .transform(response);
     }
     return response;

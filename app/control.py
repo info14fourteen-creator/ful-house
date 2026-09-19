@@ -21,6 +21,8 @@ class Controller:
         self.idle_seconds = int(os.getenv('GPU_IDLE_SECONDS', '600'))
         self.lock = asyncio.Lock()
         self.job = None
+        self.failure_reason = ''
+        self.startup_started = None
         self.tunnel = None
 
     async def request(self, method, path, **kwargs):
@@ -70,17 +72,43 @@ class Controller:
             if self.phase in ('starting', 'loading', 'ready', 'stopping'):
                 return
             self.phase = 'starting'
+            self.failure_reason = ''
+            self.startup_started = time.monotonic()
             self.job = asyncio.create_task(self.start())
 
+    async def select_gpu(self):
+        """Choose available local capacity before renting, within the existing cap."""
+        preferred=os.getenv('RUNPOD_GPU_IDS',
+            'NVIDIA L40S,NVIDIA RTX 6000 Ada Generation,NVIDIA L40,NVIDIA RTX A6000,NVIDIA A40').split(',')
+        catalog=await self.request('GET','/catalog/gpus',params={
+            'include':'AVAILABILITY','product':'POD','cloud':'SECURE','minCudaVersion':'12.8'})
+        by_id={gpu['id']:gpu for gpu in catalog.get('gpus',[])}
+        for gpu_id in map(str.strip,preferred):
+            gpu=by_id.get(gpu_id,{})
+            price=gpu.get('price',{}).get('secure')
+            local=any(dc.get('id')==os.environ['RUNPOD_DATA_CENTER'] and
+                      dc.get('availability') in ('LOW','MEDIUM','HIGH')
+                      for dc in gpu.get('dataCenters',[]))
+            if (gpu.get('secure') and gpu.get('memory',0)>=48 and local and
+                    isinstance(price,(int,float)) and 0<price<=float(os.getenv('GPU_MAX_HOURLY_USD','1.09'))):
+                logging.warning('GPU startup: selected gpu=%s hourly_usd=%.2f',gpu_id,price)
+                return gpu_id
+        raise RuntimeError('No compatible GPU capacity at the model volume location within the hourly limit')
+
     async def start(self):
+        started=time.monotonic()
+        def milestone(name):
+            logging.warning('GPU startup: %s elapsed_seconds=%.2f',name,time.monotonic()-started)
+        milestone('requested')
         try:
             if self.volume:
                 await self.discover()
                 if not self.pod:
+                    gpu_id=await self.select_gpu()
                     pod=await self.request('POST','/pods',json={
                         'name':'fulhouse-network-gpu','cloud':'SECURE',
                         'dataCenterIds':[os.environ['RUNPOD_DATA_CENTER']],
-                        'gpu':{'id':'NVIDIA L40S','count':1,'minCudaVersion':'12.8'},
+                        'gpu':{'id':gpu_id,'count':1,'minCudaVersion':'12.8'},
                         'image':'runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404',
                         'args':'/workspace/boot-fulhouse.sh','disk':20,'ports':['22/tcp'],
                         'env':{'PUBLIC_KEY':os.environ['RUNPOD_SSH_PUBLIC_KEY']},
@@ -100,6 +128,7 @@ class Controller:
                 await asyncio.sleep(3)
             else:
                 raise TimeoutError('Pod did not become ready')
+            milestone('pod_running')
             private = Path('/tmp/fulhouse-ssh'); private.mkdir(mode=0o700, exist_ok=True)
             key = private/'key'; key.write_text(os.environ['RUNPOD_SSH_KEY'].replace('\\n','\n').strip()+'\n'); key.chmod(0o600)
             known = private/'known_hosts'; known.write_text('fulhouse-runpod '+os.environ['RUNPOD_SSH_HOST_KEY'].strip()+'\n'); known.chmod(0o600)
@@ -111,12 +140,13 @@ class Controller:
                 if endpoint:
                     args[4]=str(int(endpoint['port']))
                     args[-1]=f"root@{endpoint['host']}"
-                proc=await asyncio.create_subprocess_exec(*args,'curl -fsS http://127.0.0.1:11434/api/version >/dev/null || (nohup bash /workspace/start-model.sh >/workspace/ollama.log 2>&1 </dev/null &)',stdout=asyncio.subprocess.DEVNULL,stderr=asyncio.subprocess.PIPE)
+                proc=await asyncio.create_subprocess_exec(*args,'curl --max-time 5 -fsS http://127.0.0.1:11434/api/version >/dev/null || (nohup bash /workspace/start-model.sh >/workspace/ollama.log 2>&1 </dev/null &)',stdout=asyncio.subprocess.DEVNULL,stderr=asyncio.subprocess.PIPE)
                 _,ssh_error=await proc.communicate()
                 if proc.returncode == 0: break
                 logging.warning('SSH connection failed: %s',ssh_error.decode(errors='replace')[-600:])
                 await asyncio.sleep(3)
             else: raise RuntimeError('SSH not ready')
+            milestone('ssh_ready')
             self.tunnel=await asyncio.create_subprocess_exec(*args[:-1],'-o','ExitOnForwardFailure=yes','-N','-L','127.0.0.1:11434:127.0.0.1:11434',args[-1],stdout=asyncio.subprocess.DEVNULL,stderr=asyncio.subprocess.DEVNULL)
             for _ in range(30):
                 try:
@@ -125,10 +155,15 @@ class Controller:
                     break
                 except (httpx.HTTPError,OSError): await asyncio.sleep(2)
             else: raise TimeoutError('Ollama not available')
+            milestone('ollama_available')
             async with httpx.AsyncClient(timeout=180) as client:
                 r=await client.post('http://127.0.0.1:11434/api/generate',json={'model':MODEL,'prompt':'','stream':False,'keep_alive':-1});r.raise_for_status()
+            milestone('model_ready')
             self.phase='ready';self.last_activity=time.monotonic()
-        except Exception:
+        except Exception as exc:
+            if 'No compatible GPU capacity' in str(exc) or (isinstance(exc,httpx.HTTPStatusError) and exc.response.status_code==400 and 'no longer any instances' in exc.response.text):
+                self.failure_reason='capacity'
+            else:self.failure_reason='startup'
             logging.exception("GPU startup failed")
             # Failed provisioning must not leave a newly started GPU billing silently.
             try:

@@ -2,6 +2,7 @@
 import asyncio
 import importlib
 import logging
+import time
 from starlette.responses import PlainTextResponse
 
 loaded=None
@@ -11,11 +12,16 @@ startup_error=False
 
 async def initialize():
     global loaded,context,startup_error
+    started=time.monotonic()
+    logging.warning('Interface startup: importing application')
     try:
         module=await asyncio.to_thread(importlib.import_module,'app.main')
+        imported=time.monotonic()
+        logging.warning('Interface startup: imports complete seconds=%.2f',imported-started)
         context=module.upstream.router.lifespan_context(module.upstream)
         await context.__aenter__()
         loaded=module.app
+        logging.warning('Interface startup: ready lifespan_seconds=%.2f total_seconds=%.2f',time.monotonic()-imported,time.monotonic()-started)
     except Exception:
         startup_error=True
         logging.exception('Open WebUI startup failed')

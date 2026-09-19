@@ -31,7 +31,7 @@
         startAfterLogin=false;sessionStorage.removeItem('fh-start-after-login');
         if(['stopped','error'].includes(s.phase))s=await api('start','POST');
       }
-      controls.hidden=false;running=s.phase==='ready';busy=['starting','loading','stopping'].includes(s.phase);status.textContent=phrases[s.phase]||'Checking server';phase.textContent=status.textContent;controls.querySelector('#fh-dot').dataset.ready=String(running);toggle.textContent=running?'Stop':busy?'Please wait…':'Start';toggle.disabled=busy||s.phase==='unconfigured';if(running&&!wait.hidden)hideWait();}
+      controls.hidden=false;running=s.phase==='ready';busy=['starting','loading','stopping'].includes(s.phase);status.textContent=s.failure_reason==='capacity'?'No GPU capacity — try again':phrases[s.phase]||'Checking server';phase.textContent=status.textContent;controls.querySelector('#fh-dot').dataset.ready=String(running);toggle.textContent=running?'Stop':busy?'Please wait…':'Start';toggle.disabled=busy||s.phase==='unconfigured';if(running&&!wait.hidden)hideWait();}
     catch(e){if(e.message==='auth'){controls.hidden=true;hideWait();}else {status.textContent='Server unreachable';phase.textContent='Connection lost. Retrying…';}}
   }
   toggle.onclick=async()=>{toggle.disabled=true;try{await api(running?'stop':'start','POST');if(!running)showWait();await refresh();}catch{status.textContent='Command failed';toggle.disabled=false;}};

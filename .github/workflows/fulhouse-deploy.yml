@@ -1,0 +1,66 @@
+name: Fullhouse deployment
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        type: choice
+        options: [cloudflare, heroku]
+        required: true
+      revision:
+        description: Exact commit SHA to deploy
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: fulhouse-deploy-${{ inputs.target }}
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Validate revision
+        env:
+          REVISION: ${{ inputs.revision }}
+        run: '[[ "$REVISION" =~ ^[a-f0-9]{40}$ ]]'
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        if: inputs.target == 'cloudflare'
+        with:
+          node-version: '22'
+      - name: Deploy Cloudflare Pages
+        if: inputs.target == 'cloudflare'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.FULHOUSE_CLOUDFLARE_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: c49619f872e97a2fc43b245069d4a00f
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          mkdir -p fulhouse-deploy
+          cd fulhouse-deploy
+          export NPM_CONFIG_USERCONFIG=/dev/null NPM_CONFIG_GLOBALCONFIG=/dev/null
+          export NPM_CONFIG_REGISTRY=https://registry.npmjs.org
+          npm exec --yes --package=wrangler@4.84.1 -- wrangler pages deploy "$GITHUB_WORKSPACE/pages" --project-name ful-house --branch main
+      - name: Deploy Heroku
+        if: inputs.target == 'heroku'
+        env:
+          HEROKU_API_KEY: ${{ secrets.FULHOUSE_HEROKU_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          askpass=$(mktemp)
+          trap 'rm -f "$askpass"' EXIT
+          cat > "$askpass" <<'ASKPASS'
+          #!/bin/sh
+          case "$1" in
+            *Username*) printf '%s\n' heroku ;;
+            *) printf '%s\n' "$HEROKU_API_KEY" ;;
+          esac
+          ASKPASS
+          chmod 700 "$askpass"
+          GIT_ASKPASS="$askpass" GIT_TERMINAL_PROMPT=0 git push https://git.heroku.com/fulhouse-ai.git HEAD:main
