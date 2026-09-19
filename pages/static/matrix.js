@@ -55,7 +55,7 @@
   if(!engines[engine])engine='qwen';
   function setEngine(next){engine=engines[next]?next:'qwen';localStorage.setItem('fh-engine',engine);document.querySelectorAll('[data-fh-engine]').forEach(button=>button.dataset.active=String(button.dataset.fhEngine===engine));}
   function installEngineButtons(){
-    if(location.pathname==='/auth')return;
+    if(location.pathname==='/auth'||location.pathname==='/login')return;
     const input=document.querySelector('textarea,[contenteditable="true"]');
     if(!input || document.querySelector('#fh-engine-switch'))return;
     const host=input.closest('form') || input.parentElement?.parentElement || input.parentElement;

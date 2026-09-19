@@ -47,7 +47,10 @@
     }catch{resetLogin();}
     finally{password.value='';password.style.width='1ch';pending=false;password.readOnly=false;document.querySelector('#password-mask').textContent='';if(step==='password')password.focus();else login.focus();}
   }
-  for(const event of ['paste','drop','beforeinput'])form.addEventListener(event,e=>{if(event.type!=='beforeinput'||e.inputType?.startsWith('insertFrom')||e.inputType==='insertReplacementText')e.preventDefault();});
+  // Keep the terminal keyboard-only without intercepting `beforeinput`.
+  // Safari can report ordinary keyboard/IME input as insertReplacementText,
+  // which made the login field appear completely broken.
+  for(const event of ['paste','drop'])form.addEventListener(event,e=>e.preventDefault());
   form.addEventListener('submit',event=>event.preventDefault());
   form.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();resetLogin();}if(event.key==='Enter'&&!event.isComposing){event.preventDefault();if(!pending){if(step==='login')enterPassword();else signIn();}}});
   tick();setInterval(tick,1000);health();setInterval(health,20000);login.focus();
