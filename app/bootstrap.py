@@ -1,8 +1,10 @@
 """Restore Fullhouse model and tool configuration on every web start."""
 from pathlib import Path
 import logging
+import os
 
 MODEL_ID = 'huihui_ai/qwen3-coder-abliterated:30b'
+OPENAI_MODEL_ID = 'fullhouse-codex-api'
 TOOL_ID = 'fulhouse_engineer'
 
 log = logging.getLogger(__name__)
@@ -62,23 +64,31 @@ async def configure_engineer(upstream):
     else:
         await Tools.insert_new_tool(user.id, tool_form, specs)
 
-    existing_model = await Models.get_model_by_id(MODEL_ID)
-    params = dict(existing_model.params.model_dump() if existing_model else {})
-    params.update({'system': rules, 'function_calling': 'native'})
-    meta = dict(existing_model.meta.model_dump() if existing_model else {})
-    meta['knowledge'] = None
-    meta['toolIds'] = [TOOL_ID]
-    form = ModelForm(
-        id=MODEL_ID,
-        base_model_id=None,
-        name='Fullhouse',
-        params=params,
-        meta=meta,
-        access_grants=[],
-        is_active=True,
+    async def upsert_model(model_id, name, base_model_id):
+        existing_model = await Models.get_model_by_id(model_id)
+        params = dict(existing_model.params.model_dump() if existing_model else {})
+        params.update({'system': rules, 'function_calling': 'native'})
+        meta = dict(existing_model.meta.model_dump() if existing_model else {})
+        meta['knowledge'] = None
+        meta['toolIds'] = [TOOL_ID]
+        form = ModelForm(
+            id=model_id,
+            base_model_id=base_model_id,
+            name=name,
+            params=params,
+            meta=meta,
+            access_grants=[],
+            is_active=True,
+        )
+        if existing_model:
+            await Models.update_model_by_id(model_id, form)
+        else:
+            await Models.insert_new_model(form, user.id)
+
+    await upsert_model(MODEL_ID, 'Fullhouse Local', None)
+    await upsert_model(
+        OPENAI_MODEL_ID,
+        'Fullhouse Codex API',
+        os.getenv('FULHOUSE_OPENAI_MODEL', 'gpt-5.2-codex'),
     )
-    if existing_model:
-        await Models.update_model_by_id(MODEL_ID, form)
-    else:
-        await Models.insert_new_model(form, user.id)
-    log.warning('Fullhouse bootstrap configured model=%s tool=%s', MODEL_ID, TOOL_ID)
+    log.warning('Fullhouse bootstrap configured models=%s,%s tool=%s', MODEL_ID, OPENAI_MODEL_ID, TOOL_ID)

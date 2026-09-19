@@ -90,7 +90,14 @@ async def open_pull_request(branch,title,body):
 
 async def project_status():
     from app.main import control
-    out={'project':REPO,'gpu':{'phase':control.phase,'active_jobs':control.active}}
+    out={
+        'project':REPO,
+        'gpu':{'phase':control.phase,'active_jobs':control.active},
+        'openai':{
+            'api_configured':bool(os.getenv('OPENAI_API_KEY') or os.getenv('CODEX_API_KEY')),
+            'model':os.getenv('FULHOUSE_OPENAI_MODEL','gpt-5.2-codex'),
+        },
+    }
     for service,path in [('github','actions/workflows/fulhouse-deploy.yml/runs?per_page=5'),('heroku','dynos'),('cloudflare','deployments')]:
         try:
             data=await request(service,'GET',path)
