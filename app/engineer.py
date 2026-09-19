@@ -60,6 +60,72 @@ async def request(service,method,path,repo=REPO,**kwargs):
     return response.json() if response.content else {}
 
 
+def _dump_model(value):
+    if hasattr(value,'model_dump'):
+        return value.model_dump()
+    if hasattr(value,'dict'):
+        return value.dict()
+    return value
+
+
+async def openwebui_files(query='',limit=20):
+    try:
+        from open_webui.models.files import Files
+    except Exception as exc:
+        raise RuntimeError('Open WebUI file store is unavailable') from exc
+    limit=max(1,min(int(limit),100))
+    result=await Files.get_files()
+    if isinstance(result,dict):
+        items=result.get('items',[])
+    else:
+        items=result or []
+    q=(query or '').lower().strip()
+    out=[]
+    for raw in items:
+        item=_dump_model(raw)
+        name=(item.get('filename') or item.get('meta',{}).get('name') or '')
+        if q and q not in name.lower() and q not in item.get('id','').lower():
+            continue
+        data=item.get('data') or {}
+        meta=item.get('meta') or {}
+        out.append({
+            'id':item.get('id'),
+            'filename':name,
+            'content_type':meta.get('content_type'),
+            'size':meta.get('size'),
+            'status':data.get('status'),
+            'content_chars':len(data.get('content') or ''),
+            'created_at':item.get('created_at'),
+            'updated_at':item.get('updated_at'),
+        })
+    return {'files':out[:limit], 'limit':limit}
+
+
+async def openwebui_file_content(file_id,max_chars=50000):
+    if not file_id or len(file_id)>120:raise ValueError('Provide a file id')
+    max_chars=max(1000,min(int(max_chars),200000))
+    try:
+        from open_webui.models.files import Files
+    except Exception as exc:
+        raise RuntimeError('Open WebUI file store is unavailable') from exc
+    raw=await Files.get_file_by_id(file_id)
+    if not raw:raise FileNotFoundError('Open WebUI file not found')
+    item=_dump_model(raw)
+    data=item.get('data') or {}
+    meta=item.get('meta') or {}
+    content=data.get('content') or ''
+    return {
+        'id':item.get('id'),
+        'filename':item.get('filename') or meta.get('name'),
+        'content_type':meta.get('content_type'),
+        'size':meta.get('size'),
+        'status':data.get('status'),
+        'content':content[:max_chars],
+        'content_chars':len(content),
+        'truncated':len(content)>max_chars,
+    }
+
+
 async def github_request(method,path,**kwargs):
     key=os.getenv('FULHOUSE_GITHUB_TOKEN','')
     if not key:raise RuntimeError('github credentials are not configured')

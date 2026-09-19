@@ -11,6 +11,17 @@ class Tools:
         engineer.admin(__user__)
         return json.dumps(await engineer.project_status(),ensure_ascii=False)
 
+
+    async def openwebui_files(self, query: str = '', limit: int = 20, __user__: dict = None) -> str:
+        """List files uploaded to Open WebUI, including attached PDFs processed into text. Use this before saying an attachment is inaccessible."""
+        engineer.admin(__user__)
+        return json.dumps(await engineer.openwebui_files(query,limit),ensure_ascii=False)
+
+    async def openwebui_file_content(self, file_id: str, max_chars: int = 50000, __user__: dict = None) -> str:
+        """Read processed text content for an Open WebUI uploaded file by id. Increase max_chars up to 200000 for long PDFs."""
+        engineer.admin(__user__)
+        return json.dumps(await engineer.openwebui_file_content(file_id,max_chars),ensure_ascii=False)
+
     async def github_repositories(self, query: str = '', limit: int = 100, __user__: dict = None) -> str:
         """List GitHub repositories available to the configured account. Optional query filters by name or description."""
         engineer.admin(__user__)
