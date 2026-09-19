@@ -88,7 +88,7 @@ async def configure_engineer(upstream):
     await upsert_model(MODEL_ID, 'Fullhouse Local', None)
     await upsert_model(
         OPENAI_MODEL_ID,
-        'Fullhouse Codex API',
-        os.getenv('FULHOUSE_OPENAI_MODEL', 'gpt-5.3-codex'),
+        'Fullhouse OpenAI API',
+        os.getenv('FULHOUSE_OPENAI_CHAT_MODEL', 'gpt-5.6-sol'),
     )
     log.warning('Fullhouse bootstrap configured models=%s,%s tool=%s', MODEL_ID, OPENAI_MODEL_ID, TOOL_ID)

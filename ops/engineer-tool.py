@@ -35,3 +35,8 @@ class Tools:
         """Run shell commands, edit files, clone the public repository and run tests as a non-root developer inside an isolated filesystem. Persistent directory: /workspace. Timeout maximum 120 seconds. No cloud credentials are exposed."""
         engineer.admin(__user__)
         return json.dumps(await engineer.workspace(command,timeout_seconds),ensure_ascii=False)
+
+    async def openai_codex(self, prompt: str, context: str = '', max_output_tokens: int = 4000, __user__: dict = None) -> str:
+        """Delegate a coding question or plan to the OpenAI Codex model through the Responses API. The API key is server-side and never exposed."""
+        engineer.admin(__user__)
+        return json.dumps(await engineer.openai_codex(prompt,context,max_output_tokens),ensure_ascii=False)

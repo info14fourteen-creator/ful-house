@@ -95,7 +95,8 @@ async def project_status():
         'gpu':{'phase':control.phase,'active_jobs':control.active},
         'openai':{
             'api_configured':bool(os.getenv('OPENAI_API_KEY') or os.getenv('CODEX_API_KEY')),
-            'model':os.getenv('FULHOUSE_OPENAI_MODEL','gpt-5.3-codex'),
+            'chat_model':os.getenv('FULHOUSE_OPENAI_CHAT_MODEL','gpt-5.6-sol'),
+            'codex_model':os.getenv('FULHOUSE_CODEX_MODEL','gpt-5.3-codex'),
         },
     }
     for service,path in [('github','actions/workflows/fulhouse-deploy.yml/runs?per_page=5'),('heroku','dynos'),('cloudflare','deployments')]:
@@ -156,3 +157,38 @@ async def _workspace(command,timeout_seconds=60):
             if cleanup.returncode:raise RuntimeError('Workspace process cleanup failed')
         return {'exit_code':proc.returncode,'output':output.decode(errors='replace'),'output_limit_bytes':24000}
     finally:await control.end_request()
+
+
+async def openai_codex(prompt,context='',max_output_tokens=4000):
+    if not prompt or len(prompt)>20000:raise ValueError('Provide a prompt up to 20000 characters')
+    if context and len(context)>20000:raise ValueError('Context is limited to 20000 characters')
+    key=os.getenv('CODEX_API_KEY') or os.getenv('OPENAI_API_KEY','')
+    if not key:raise RuntimeError('OpenAI API key is not configured')
+    max_output_tokens=max(200,min(int(max_output_tokens),8000))
+    instructions='You are a concise senior coding agent. Reply in Russian. Code comments, commit messages and developer docs must be English. Do not claim tool access you do not have.'
+    input_text=prompt if not context else f'Context:\\n{context}\\n\\nTask:\\n{prompt}'
+    headers={'Authorization':'Bearer '+key,'Content-Type':'application/json'}
+    if os.getenv('OPENAI_ORG_ID'):headers['OpenAI-Organization']=os.getenv('OPENAI_ORG_ID')
+    payload={
+        'model':os.getenv('FULHOUSE_CODEX_MODEL','gpt-5.3-codex'),
+        'instructions':instructions,
+        'input':input_text,
+        'max_output_tokens':max_output_tokens,
+    }
+    async with httpx.AsyncClient(timeout=180) as client:
+        response=await client.post('https://api.openai.com/v1/responses',headers=headers,json=payload)
+    if response.status_code>=400:
+        raise RuntimeError(f'OpenAI Responses request failed: HTTP {response.status_code}')
+    data=response.json()
+    texts=[]
+    for item in data.get('output',[]):
+        if item.get('type')=='message':
+            for part in item.get('content',[]):
+                if part.get('type')=='output_text':texts.append(part.get('text',''))
+    return {
+        'model':data.get('model'),
+        'response_id':data.get('id'),
+        'status':data.get('status'),
+        'text':'\\n'.join(t for t in texts if t).strip(),
+        'usage':data.get('usage',{}),
+    }
