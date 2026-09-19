@@ -21,7 +21,7 @@ export default {
       response.headers.set('Cache-Control','no-cache');
       return response;
     }
-    if (request.method==='GET' && url.pathname==='/auth') {
+    if (request.method==='GET' && ['/auth','/login'].includes(url.pathname)) {
       const asset=await env.ASSETS.fetch(new URL('/login.html',url));
       const response=new Response(asset.body,asset);
       response.headers.set('Cache-Control','no-store');
@@ -45,7 +45,7 @@ export default {
     headers.delete('Host');
     // Do not trust client-supplied upstream identity headers.
     for (const name of ['x-openwebui-user-email','x-openwebui-user-name','x-openwebui-user-role','x-forwarded-user']) headers.delete(name);
-    const navigation=request.method==='GET' && ['/', '/auth'].includes(url.pathname);
+    const navigation=request.method==='GET' && ['/', '/auth', '/login'].includes(url.pathname);
     let upstream;
     try {
       upstream=await fetch(target,new Request(request,{headers,redirect:'manual',...(navigation?{signal:AbortSignal.timeout(5000)}:{})}));
@@ -53,7 +53,7 @@ export default {
       upstream=new Response('Origin temporarily unavailable',{status:503});
     }
     if (upstream.status===101) return upstream;
-    if ([502,503,504].includes(upstream.status) && request.method==='GET' && ['/', '/auth'].includes(url.pathname)) {
+    if ([502,503,504].includes(upstream.status) && request.method==='GET' && ['/', '/auth', '/login'].includes(url.pathname)) {
       const fallback=await env.ASSETS.fetch(new URL('/boot.html',url));
       const boot=new Response(fallback.body,{status:503,headers:fallback.headers});
       boot.headers.set('Cache-Control','no-store');
