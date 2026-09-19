@@ -13,6 +13,7 @@ from open_webui.models.auths import Auths
 from open_webui.models.users import Users
 from app.control import Controller, MODEL
 from app.bridge import start_bridge
+from app.bootstrap import configure_engineer
 
 from app.state import State
 state=State()
@@ -28,6 +29,7 @@ async def lifespan(app):
         password_hash=os.getenv('FULHOUSE_ADMIN_PASSWORD_HASH')
         if password_hash and not await Users.has_users():
             await Auths.insert_new_auth(email='steelstan@ful.house',password=password_hash,name='steelstan',role='admin')
+        await configure_engineer(upstream)
         if control.key:
             await control.reconcile()
         bridge=await start_bridge(control)
