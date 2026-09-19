@@ -43,7 +43,9 @@ jobs:
           cd "$RUNNER_TEMP"
           mkdir -p fulhouse-deploy
           cd fulhouse-deploy
-          export NPM_CONFIG_USERCONFIG=/dev/null NPM_CONFIG_GLOBALCONFIG=/dev/null
+          touch "$RUNNER_TEMP/npm-userconfig" "$RUNNER_TEMP/npm-globalconfig"
+          export NPM_CONFIG_USERCONFIG="$RUNNER_TEMP/npm-userconfig"
+          export NPM_CONFIG_GLOBALCONFIG="$RUNNER_TEMP/npm-globalconfig"
           export NPM_CONFIG_REGISTRY=https://registry.npmjs.org
           npm exec --yes --package=wrangler@4.84.1 -- wrangler pages deploy "$GITHUB_WORKSPACE/pages" --project-name ful-house --branch main
       - name: Deploy Heroku
