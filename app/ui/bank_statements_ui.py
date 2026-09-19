@@ -27,6 +27,9 @@ async def get_bank_statements_page():
             .bank-option { display: inline-block; margin-right: 15px; }
             .soon { color: #999; }
             .statement-section { border: 1px solid #ccc; padding: 15px; margin-top: 20px; }
+            .file-upload { margin: 10px 0; }
+            .btn { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; cursor: pointer; }
+            .btn:hover { background-color: #45a049; }
         </style>
     </head>
     <body>
@@ -54,9 +57,15 @@ async def get_bank_statements_page():
             <h2>Импорт выписки Альфа-Банка</h2>
             <p>Выберите PDF файл выписки для импорта:</p>
             <form id="import-form" enctype="multipart/form-data">
-                <input type="file" id="pdf-file" name="pdf-file" accept=".pdf" required>
-                <br><br>
-                <button type="submit">Импортировать</button>
+                <div class="file-upload">
+                    <input type="file" id="pdf-file" name="pdf-file" accept=".pdf" required>
+                </div>
+                <div class="file-upload">
+                    <label for="account-number">Номер счета:</label>
+                    <input type="text" id="account-number" name="account-number" required>
+                </div>
+                <br>
+                <button type="submit" class="btn">Импортировать</button>
             </form>
             
             <div id="import-result"></div>
@@ -67,10 +76,15 @@ async def get_bank_statements_page():
             document.getElementById('import-form').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const fileInput = document.getElementById('pdf-file');
-                if (fileInput.files.length > 0) {
+                const accountNumber = document.getElementById('account-number').value;
+                
+                if (fileInput.files.length > 0 && accountNumber) {
                     // In a real implementation, this would submit to backend API
                     document.getElementById('import-result').innerHTML = 
                         '<p>Файл ' + fileInput.files[0].name + ' готов к импорту.</p>';
+                } else {
+                    document.getElementById('import-result').innerHTML = 
+                        '<p style="color: red;">Пожалуйста, выберите файл и укажите номер счета</p>';
                 }
             });
         </script>
@@ -96,6 +110,7 @@ async def get_statement_page(statement_id: int):
             table {{ border-collapse: collapse; width: 100%; }}
             th, td {{ border: 1px solid #ccc; padding: 8px; text-align: left; }}
             th {{ background-color: #f2f2f2; }}
+            .summary-table {{ margin-top: 20px; }}
         </style>
     </head>
     <body>

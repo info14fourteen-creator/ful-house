@@ -6,18 +6,18 @@ class AlphaBankClassifier:
     Classifies bank operations based on Alpha-Bank operation codes.
     
     For detailed code information see:
-    - B01DDMMYYNNNNNNN: Internal transfers between own accounts
-    - C16DDMMYYNNNNNNN: Outgoing transfer via SBP to phone number
-    - C42DDMMYYNNNNNNN: Outgoing transfer via SBP to phone number
-    - C46DDMMYYNNNNNNN: Outgoing transfer via SBP to phone number
-    - C17DDMMYYNNNNNNN: Incoming transfer via SBP from phone number
-    - C19DDMMYYNNNNNNN: Incoming transfer from Sberbank
-    - C07DDMMYYNNNNNNN: Transfer of funds, mostly expense
-    - C21DDMMYYNNNNNNN: Payment to merchant via SBP
-    - C51DDMMYYNNNNNNN: QR payment through Sberbank
-    - C52DDMMYYNNNNNNN: QR payment refund
-    - C78DDMMYYNNNNNNN: Fine payment via SBP
-    - A01DDMMYYNNNNNNN: Mobile communication, state fee, fine or other service payment
+    - B01DDMMYYNNNNNNNN: Internal transfers between own accounts
+    - C16DDMMYYNNNNNNNN: Outgoing transfer via SBP to phone number
+    - C42DDMMYYNNNNNNNN: Outgoing transfer via SBP to phone number
+    - C46DDMMYYNNNNNNNN: Outgoing transfer via SBP to phone number
+    - C17DDMMYYNNNNNNNN: Incoming transfer via SBP from phone number
+    - C19DDMMYYNNNNNNNN: Incoming transfer from Sberbank
+    - C07DDMMYYNNNNNNNN: Transfer of funds, mostly expense
+    - C21DDMMYYNNNNNNNN: Payment to merchant via SBP
+    - C51DDMMYYNNNNNNNN: QR payment through Sberbank
+    - C52DDMMYYNNNNNNNN: QR payment refund
+    - C78DDMMYYNNNNNNNN: Fine payment via SBP
+    - A01DDMMYYNNNNNNNN: Mobile communication, state fee, fine or other service payment
     - CRD_XXXXXX: Card operation: purchase, cash withdrawal, service payment
     - CHS-2A-MMDDNNNNN: Cash withdrawal from account; expense
     - CASHIN<terminal_id>: Cash deposit via Recycling device; income
