@@ -95,7 +95,7 @@ async def project_status():
         'gpu':{'phase':control.phase,'active_jobs':control.active},
         'openai':{
             'api_configured':bool(os.getenv('OPENAI_API_KEY') or os.getenv('CODEX_API_KEY')),
-            'model':os.getenv('FULHOUSE_OPENAI_MODEL','gpt-5.2-codex'),
+            'model':os.getenv('FULHOUSE_OPENAI_MODEL','gpt-5.3-codex'),
         },
     }
     for service,path in [('github','actions/workflows/fulhouse-deploy.yml/runs?per_page=5'),('heroku','dynos'),('cloudflare','deployments')]:
