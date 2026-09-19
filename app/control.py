@@ -8,6 +8,7 @@ import time
 import httpx
 
 MODEL = 'huihui_ai/qwen3-coder-abliterated:30b'
+EMBEDDING_MODEL = 'nomic-embed-text:latest'
 
 class Controller:
     def __init__(self):
@@ -156,6 +157,9 @@ class Controller:
                 except (httpx.HTTPError,OSError): await asyncio.sleep(2)
             else: raise TimeoutError('Ollama not available')
             milestone('ollama_available')
+            async with httpx.AsyncClient(timeout=600) as client:
+                r=await client.post('http://127.0.0.1:11434/api/pull',json={'model':EMBEDDING_MODEL,'stream':False});r.raise_for_status()
+            milestone('embedding_model_ready')
             async with httpx.AsyncClient(timeout=180) as client:
                 r=await client.post('http://127.0.0.1:11434/api/generate',json={'model':MODEL,'prompt':'','stream':False,'keep_alive':-1});r.raise_for_status()
             milestone('model_ready')

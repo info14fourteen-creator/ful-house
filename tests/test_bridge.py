@@ -55,3 +55,30 @@ class RealBridgeTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(control.active,0)
         finally:
             release.set();await bridge.cleanup();await runner.cleanup()
+
+    async def test_embed_falls_back_to_legacy_embeddings_endpoint(self):
+        from aiohttp import ClientSession
+        from app.bridge import start_bridge
+        control=Controller();control.key='test';control.phase='ready';control.api=AsyncMock(return_value={'status':'EXITED'})
+        calls=[]
+        async def embed(request):
+            calls.append('/api/embed')
+            return web.json_response({'error':'missing'}, status=404)
+        async def embeddings(request):
+            calls.append('/api/embeddings')
+            payload=await request.json()
+            self.assertEqual(payload['model'], 'nomic-embed-text:latest')
+            self.assertEqual(payload['prompt'], 'hello')
+            return web.json_response({'embedding':[0.1,0.2]})
+        upstream=web.Application();upstream.router.add_post('/api/embed',embed);upstream.router.add_post('/api/embeddings',embeddings)
+        runner=web.AppRunner(upstream);await runner.setup()
+        await web.TCPSite(runner,'127.0.0.1',11434).start()
+        bridge=await start_bridge(control)
+        try:
+            async with ClientSession() as session:
+                async with session.post('http://127.0.0.1:11435/api/embed',json={'input':'hello'}) as response:
+                    self.assertEqual(response.status, 200)
+                    self.assertEqual(await response.json(), {'model':'nomic-embed-text:latest','embeddings':[[0.1,0.2]]})
+            self.assertEqual(calls, ['/api/embed','/api/embeddings'])
+        finally:
+            await bridge.cleanup();await runner.cleanup()

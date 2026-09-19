@@ -1,7 +1,32 @@
 """Loopback-only Ollama bridge tracks the full inference stream, including background jobs."""
 import json
 from aiohttp import ClientSession, ClientTimeout, web
-from app.control import MODEL
+from app.control import MODEL, EMBEDDING_MODEL
+
+
+async def _proxy_embed(session, data):
+    """Return Ollama /api/embed output, falling back to legacy /api/embeddings."""
+    payload = json.loads(data.decode() or '{}')
+    payload.setdefault('model', EMBEDDING_MODEL)
+    async with session.post('http://127.0.0.1:11434/api/embed', json=payload) as result:
+        if result.status != 404:
+            text = await result.text()
+            if result.status >= 400:
+                raise web.HTTPBadGateway(text=text)
+            return json.loads(text or '{}')
+    inputs = payload.get('input', payload.get('prompt', ''))
+    if isinstance(inputs, str):
+        prompts = [inputs]
+    else:
+        prompts = [str(item) for item in inputs]
+    embeddings = []
+    for prompt in prompts:
+        async with session.post('http://127.0.0.1:11434/api/embeddings', json={'model': payload.get('model') or EMBEDDING_MODEL, 'prompt': prompt}) as result:
+            text = await result.text()
+            if result.status >= 400:
+                raise web.HTTPBadGateway(text=text)
+            embeddings.append(json.loads(text or '{}').get('embedding', []))
+    return {'model': payload.get('model') or EMBEDDING_MODEL, 'embeddings': embeddings}
 
 async def start_bridge(control):
     async def proxy(request):
@@ -18,6 +43,8 @@ async def start_bridge(control):
         try:
             data=await request.read()
             async with ClientSession(timeout=ClientTimeout(total=None,sock_connect=10,sock_read=300)) as session:
+                if request.path == '/api/embed':
+                    return web.json_response(await _proxy_embed(session, data))
                 async with session.request(request.method,'http://127.0.0.1:11434'+request.path_qs,data=data,headers={'Content-Type':request.headers.get('Content-Type','application/json')}) as result:
                     response=web.StreamResponse(status=result.status,headers={'Content-Type':result.headers.get('Content-Type','application/json')})
                     await response.prepare(request)

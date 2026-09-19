@@ -11,5 +11,6 @@ for n in $(seq 1 30); do
   if curl -fsS http://127.0.0.1:11434/api/version >/dev/null; then break; fi
   sleep 2
 done
+OLLAMA_HOST=127.0.0.1:11434 /workspace/runtime/bin/ollama pull nomic-embed-text:latest
 OLLAMA_HOST=127.0.0.1:11434 /workspace/runtime/bin/ollama pull huihui_ai/qwen3-coder-abliterated:30b
 # Only after completion, set Pod args to /workspace/boot-fulhouse.sh.
